@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="card_width">240dp</dimen>
-    <dimen name="card_height">135dp</dimen>
-    <dimen name="card_radius">10dp</dimen>
+    <dimen name="card_width">280dp</dimen>
+    <dimen name="card_height">157dp</dimen>
+    <dimen name="card_radius">12dp</dimen>
     <dimen name="card_stroke">2dp</dimen>
-    <dimen name="card_gradient_height">80dp</dimen>
-    <dimen name="card_padding">10dp</dimen>
+    <dimen name="card_gradient_height">90dp</dimen>
+    <dimen name="card_padding">12dp</dimen>
 
-    <dimen name="action_width">160dp</dimen>
-    <dimen name="action_height">56dp</dimen>
-    <dimen name="action_radius">10dp</dimen>
+    <dimen name="action_width">176dp</dimen>
+    <dimen name="action_height">52dp</dimen>
+    <dimen name="action_radius">26dp</dimen>
 
     <dimen name="page_margin">48dp</dimen>
     <dimen name="item_padding">16dp</dimen>
