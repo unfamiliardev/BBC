@@ -1,19 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
-<vector
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:width="176dp"
-    android:height="99dp"
-    android:viewportWidth="176"
-    android:viewportHeight="99">
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="240dp"
+    android:height="135dp"
+    android:viewportWidth="240"
+    android:viewportHeight="135">
 
     <!-- Background -->
     <path
-        android:fillColor="#161616"
-        android:pathData="M0,0 L176,0 L176,99 L0,99 Z" />
+        android:fillColor="#16161F"
+        android:pathData="M0,0 L240,0 L240,135 L0,135 Z" />
+
+    <!-- TV outline -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#2C2C3E"
+        android:strokeWidth="2"
+        android:pathData="M88,38 L152,38 Q156,38 156,42 L156,86 Q156,90 152,90 L88,90 Q84,90 84,86 L84,42 Q84,38 88,38 Z" />
+
+    <!-- Screen inner -->
+    <path
+        android:fillColor="#1E1E2E"
+        android:pathData="M90,42 L150,42 L150,84 L90,84 Z" />
 
     <!-- Play triangle -->
     <path
-        android:fillColor="#333333"
-        android:pathData="M66,30 L110,49.5 L66,69 Z" />
+        android:fillColor="#7C6AFF"
+        android:fillAlpha="0.7"
+        android:pathData="M112,56 L136,67.5 L112,79 Z" />
+
+    <!-- Stand -->
+    <path
+        android:fillColor="#00000000"
+        android:strokeColor="#2C2C3E"
+        android:strokeWidth="2"
+        android:pathData="M112,90 L112,97 M128,90 L128,97 M108,97 L132,97" />
 
 </vector>
