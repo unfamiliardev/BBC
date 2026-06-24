@@ -25,6 +25,9 @@ class MainActivity : FragmentActivity() {
         startActivity(Intent(this, CreditsActivity::class.java))
     }
 
+    // True once we've handled a long press so the subsequent KEY_UP doesn't also fire a click
+    private var longPressConsumed = false
+
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.onAttach(newBase))
     }
@@ -49,8 +52,30 @@ class MainActivity : FragmentActivity() {
         }
     }
 
-    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (konamiDetector.onKeyDown(keyCode)) return true
-        return super.onKeyDown(keyCode, event)
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        val browse = supportFragmentManager.findFragmentById(R.id.main_container) as? BrowseFragment
+
+        when (event.action) {
+            KeyEvent.ACTION_DOWN -> {
+                if (event.keyCode == KeyEvent.KEYCODE_DPAD_CENTER && event.repeatCount == 1) {
+                    // First key-repeat fires ~500 ms after initial press — treat as long press
+                    if (browse?.showOptionsForFocused() == true) {
+                        longPressConsumed = true
+                        return true
+                    }
+                }
+                // Swallow subsequent repeats after we've consumed the long press
+                if (longPressConsumed && event.keyCode == KeyEvent.KEYCODE_DPAD_CENTER) return true
+            }
+            KeyEvent.ACTION_UP -> {
+                if (longPressConsumed && event.keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {
+                    longPressConsumed = false
+                    return true
+                }
+            }
+        }
+
+        if (konamiDetector.onKeyDown(event.keyCode)) return true
+        return super.dispatchKeyEvent(event)
     }
 }

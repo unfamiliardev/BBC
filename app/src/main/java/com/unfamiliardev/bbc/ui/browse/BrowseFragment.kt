@@ -29,11 +29,28 @@ class BrowseFragment : BrowseSupportFragment() {
     private val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
     private var currentChannels: List<Channel> = emptyList()
 
+    // Tracks the currently D-pad-focused channel for DPAD_CENTER long press
+    private var focusedChannel: Channel? = null
+
+    // Row position to restore after adapter rebuilds
+    private var savedRowPosition = 0
+
     private fun cardPresenter() = ChannelCardPresenter { channel ->
+        openOptions(channel)
+    }
+
+    private fun openOptions(channel: Channel) {
         GuidedStepSupportFragment.add(
             requireActivity().supportFragmentManager,
             ChannelOptionsFragment.newInstance(channel)
         )
+    }
+
+    /** Called by MainActivity when DPAD_CENTER is long-pressed. Returns true if handled. */
+    fun showOptionsForFocused(): Boolean {
+        val channel = focusedChannel ?: return false
+        openOptions(channel)
+        return true
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,6 +58,10 @@ class BrowseFragment : BrowseSupportFragment() {
         headersState = HEADERS_ENABLED
         isHeadersTransitionOnBackEnabled = true
         title = getString(R.string.app_name)
+
+        setOnItemViewSelectedListener { _, item, _, _ ->
+            if (item is Channel) focusedChannel = item
+        }
 
         setOnItemViewClickedListener { _, item, _, _ ->
             when (item) {
@@ -89,9 +110,14 @@ class BrowseFragment : BrowseSupportFragment() {
         }
     }
 
+    override fun onPause() {
+        super.onPause()
+        savedRowPosition = selectedPosition
+    }
+
     override fun onResume() {
         super.onResume()
-        // Rebuild rows so Favourites / My List reflect any changes made in ChannelOptionsFragment
+        // Rebuild so Favourites / My List reflect changes made in ChannelOptionsFragment
         buildRows(currentChannels)
     }
 
@@ -120,14 +146,12 @@ class BrowseFragment : BrowseSupportFragment() {
             emptyAdapter.add(ActionItem(ACTION_MANAGE, getString(R.string.add_first_playlist)))
             rowsAdapter.add(ListRow(HeaderItem(rowId++, getString(R.string.getting_started)), emptyAdapter))
         } else {
-            // All Channels
             val allAdapter = ArrayObjectAdapter(cardPresenter())
             allAdapter.addAll(0, channels)
             rowsAdapter.add(
                 ListRow(HeaderItem(rowId++, getString(R.string.category_all, channels.size)), allAdapter)
             )
 
-            // Per-category rows sorted A-Z
             channels.groupBy { it.group }
                 .entries
                 .sortedBy { it.key }
@@ -145,6 +169,10 @@ class BrowseFragment : BrowseSupportFragment() {
         actionsAdapter.add(ActionItem(ACTION_SETTINGS, getString(R.string.settings)))
         actionsAdapter.add(ActionItem(ACTION_CREDITS,  getString(R.string.credits)))
         rowsAdapter.add(ListRow(HeaderItem(rowId, getString(R.string.settings)), actionsAdapter))
+
+        // Restore scroll position after layout pass
+        val target = savedRowPosition.coerceAtMost(rowsAdapter.size() - 1).coerceAtLeast(0)
+        view?.post { setSelectedPosition(target, false) }
     }
 
     companion object {
