@@ -1,0 +1,2 @@
+-keep class com.unfamiliardev.bbc.data.** { *; }
+-dontwarn okhttp3.**
