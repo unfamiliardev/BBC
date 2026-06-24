@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BBC</string>
+
+    <string name="category_all">Všetky kanály (%d)</string>
+    <string name="getting_started">Začíname</string>
+    <string name="add_first_playlist">+ Pridať prvý playlist</string>
+    <string name="manage_playlists">Správa playlistov</string>
+    <string name="manage_playlists_action">Pridať / Spravovať playlisty</string>
+    <string name="refresh">Obnoviť kanály</string>
+    <string name="credits">O aplikácii</string>
+    <string name="settings">Nastavenia</string>
+
+    <string name="no_playlists">Žiadne playlisty.\nZadajte M3U URL vyššie a stlačte Pridať.</string>
+    <string name="hint_playlist_name">Názov (nepovinné)</string>
+    <string name="hint_playlist_url">M3U URL (http://…)</string>
+    <string name="add">Pridať</string>
+    <string name="delete">Odstrániť</string>
+
+    <string name="error_loading">Chyba načítania: %s</string>
+
+    <string name="developer_label">Vývojár</string>
+    <string name="dismiss">Zavrieť</string>
+
+    <string name="settings_title">Nastavenia</string>
+    <string name="settings_desc">Konfigurácia BBC</string>
+    <string name="setting_language">Jazyk</string>
+    <string name="setting_language_desc">Vyberte jazyk aplikácie</string>
+    <string name="setting_autoplay">Prehrávať pri spustení</string>
+    <string name="setting_autoplay_desc">Spustiť posledný kanál pri otvorení aplikácie</string>
+    <string name="setting_clear_data">Vymazať playlisty</string>
+    <string name="setting_clear_data_desc">Odstrániť všetky uložené M3U zdroje</string>
+    <string name="setting_about">O aplikácii</string>
+    <string name="confirm_clear">Všetky playlisty vymazané</string>
+    <string name="autoplay_enabled">Zapnuté</string>
+    <string name="autoplay_disabled">Vypnuté</string>
+
+    <string name="lang_system">Systémový</string>
+    <string name="lang_en">English</string>
+    <string name="lang_ru">Русский</string>
+    <string name="lang_sk">Slovenčina</string>
+    <string name="lang_de">Deutsch</string>
+</resources>

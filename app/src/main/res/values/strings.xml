@@ -1,20 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- App -->
     <string name="app_name">BBC</string>
+
+    <!-- Browse -->
     <string name="category_all">All Channels (%d)</string>
     <string name="getting_started">Getting Started</string>
     <string name="add_first_playlist">+ Add Your First Playlist</string>
     <string name="manage_playlists">Manage Playlists</string>
     <string name="manage_playlists_action">Add / Manage Playlists</string>
     <string name="refresh">Refresh Channels</string>
-    <string name="credits">Credits</string>
+    <string name="credits">About</string>
     <string name="settings">Settings</string>
+
+    <!-- Playlist manager -->
     <string name="no_playlists">No playlists added yet.\nEnter an M3U URL above and tap Add.</string>
     <string name="hint_playlist_name">Name (optional)</string>
     <string name="hint_playlist_url">M3U URL (http://…)</string>
     <string name="add">Add</string>
     <string name="delete">Remove</string>
+
+    <!-- Player / errors -->
+    <string name="error_loading">Failed to load some playlists: %s</string>
+
+    <!-- Credits -->
     <string name="developer_label">Developer</string>
     <string name="dismiss">Dismiss</string>
-    <string name="error_loading">Failed to load some playlists: %s</string>
+
+    <!-- Settings page -->
+    <string name="settings_title">Settings</string>
+    <string name="settings_desc">Configure BBC</string>
+    <string name="setting_language">Language</string>
+    <string name="setting_language_desc">Choose the app language</string>
+    <string name="setting_autoplay">Resume on startup</string>
+    <string name="setting_autoplay_desc">Play the last channel when the app opens</string>
+    <string name="setting_clear_data">Clear all playlists</string>
+    <string name="setting_clear_data_desc">Remove all saved M3U sources</string>
+    <string name="setting_about">About</string>
+    <string name="confirm_clear">All playlists cleared</string>
+    <string name="autoplay_enabled">On</string>
+    <string name="autoplay_disabled">Off</string>
+
+    <!-- Languages -->
+    <string name="lang_system">System default</string>
+    <string name="lang_en">English</string>
+    <string name="lang_ru">Русский</string>
+    <string name="lang_sk">Slovenčina</string>
+    <string name="lang_de">Deutsch</string>
 </resources>

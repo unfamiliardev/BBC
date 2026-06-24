@@ -6,9 +6,11 @@
 
 package com.unfamiliardev.bbc.ui.credits
 
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import com.unfamiliardev.bbc.util.LocaleHelper
 import android.view.KeyEvent
 import androidx.fragment.app.FragmentActivity
 import com.unfamiliardev.bbc.BuildConfig
@@ -17,6 +19,10 @@ import com.unfamiliardev.bbc.databinding.ActivityCreditsBinding
 class CreditsActivity : FragmentActivity() {
 
     private lateinit var binding: ActivityCreditsBinding
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase))
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

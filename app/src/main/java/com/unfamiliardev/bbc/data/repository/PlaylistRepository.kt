@@ -35,6 +35,8 @@ class PlaylistRepository(context: Context) {
 
     suspend fun deletePlaylist(id: Long) = dao.deleteById(id)
 
+    suspend fun clearAll() = dao.deleteAll()
+
     suspend fun fetchChannels(): List<Channel> = withContext(Dispatchers.IO) {
         val all = mutableListOf<Channel>()
         for (entity in dao.getAllOnce()) {

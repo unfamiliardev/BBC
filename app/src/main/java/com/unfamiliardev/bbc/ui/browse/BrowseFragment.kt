@@ -19,6 +19,7 @@ import com.unfamiliardev.bbc.data.model.Channel
 import com.unfamiliardev.bbc.ui.credits.CreditsActivity
 import com.unfamiliardev.bbc.ui.player.PlayerActivity
 import com.unfamiliardev.bbc.ui.playlist.PlaylistActivity
+import com.unfamiliardev.bbc.ui.settings.SettingsActivity
 
 class BrowseFragment : BrowseSupportFragment() {
 
@@ -40,9 +41,10 @@ class BrowseFragment : BrowseSupportFragment() {
                     }
                 )
                 is ActionItem -> when (item.id) {
-                    ACTION_MANAGE -> startActivity(Intent(requireContext(), PlaylistActivity::class.java))
-                    ACTION_REFRESH -> viewModel.refresh()
-                    ACTION_CREDITS -> startActivity(Intent(requireContext(), CreditsActivity::class.java))
+                    ACTION_MANAGE   -> startActivity(Intent(requireContext(), PlaylistActivity::class.java))
+                    ACTION_REFRESH  -> viewModel.refresh()
+                    ACTION_SETTINGS -> startActivity(Intent(requireContext(), SettingsActivity::class.java))
+                    ACTION_CREDITS  -> startActivity(Intent(requireContext(), CreditsActivity::class.java))
                 }
             }
         }
@@ -61,9 +63,7 @@ class BrowseFragment : BrowseSupportFragment() {
 
         viewModel = ViewModelProvider(this)[BrowseViewModel::class.java]
 
-        viewModel.channels.observe(viewLifecycleOwner) { channels ->
-            buildRows(channels)
-        }
+        viewModel.channels.observe(viewLifecycleOwner) { channels -> buildRows(channels) }
 
         viewModel.loading.observe(viewLifecycleOwner) { loading ->
             if (loading) progressBarManager.show() else progressBarManager.hide()
@@ -84,17 +84,11 @@ class BrowseFragment : BrowseSupportFragment() {
             emptyAdapter.add(ActionItem(ACTION_MANAGE, getString(R.string.add_first_playlist)))
             rowsAdapter.add(ListRow(HeaderItem(0, getString(R.string.getting_started)), emptyAdapter))
         } else {
-            // All Channels row
             val allAdapter = ArrayObjectAdapter(ChannelCardPresenter())
             allAdapter.addAll(0, channels)
             rowsAdapter.add(
-                ListRow(
-                    HeaderItem(0, getString(R.string.category_all, channels.size)),
-                    allAdapter
-                )
+                ListRow(HeaderItem(0, getString(R.string.category_all, channels.size)), allAdapter)
             )
-
-            // Per-category rows, sorted by name
             channels.groupBy { it.group }
                 .entries
                 .sortedBy { it.key }
@@ -102,30 +96,25 @@ class BrowseFragment : BrowseSupportFragment() {
                     val adapter = ArrayObjectAdapter(ChannelCardPresenter())
                     adapter.addAll(0, grouped)
                     rowsAdapter.add(
-                        ListRow(
-                            HeaderItem((idx + 1).toLong(), "$group (${grouped.size})"),
-                            adapter
-                        )
+                        ListRow(HeaderItem((idx + 1).toLong(), "$group (${grouped.size})"), adapter)
                     )
                 }
         }
 
-        // Settings / actions row always at the bottom
         val actionsAdapter = ArrayObjectAdapter(ActionPresenter())
-        actionsAdapter.add(ActionItem(ACTION_MANAGE, getString(R.string.manage_playlists_action)))
-        actionsAdapter.add(ActionItem(ACTION_REFRESH, getString(R.string.refresh)))
-        actionsAdapter.add(ActionItem(ACTION_CREDITS, getString(R.string.credits)))
+        actionsAdapter.add(ActionItem(ACTION_MANAGE,   getString(R.string.manage_playlists_action)))
+        actionsAdapter.add(ActionItem(ACTION_REFRESH,  getString(R.string.refresh)))
+        actionsAdapter.add(ActionItem(ACTION_SETTINGS, getString(R.string.settings)))
+        actionsAdapter.add(ActionItem(ACTION_CREDITS,  getString(R.string.credits)))
         rowsAdapter.add(
-            ListRow(
-                HeaderItem(rowsAdapter.size().toLong(), getString(R.string.settings)),
-                actionsAdapter
-            )
+            ListRow(HeaderItem(rowsAdapter.size().toLong(), getString(R.string.settings)), actionsAdapter)
         )
     }
 
     companion object {
-        private const val ACTION_MANAGE = "action_manage"
-        private const val ACTION_REFRESH = "action_refresh"
-        private const val ACTION_CREDITS = "action_credits"
+        private const val ACTION_MANAGE   = "action_manage"
+        private const val ACTION_REFRESH  = "action_refresh"
+        private const val ACTION_SETTINGS = "action_settings"
+        private const val ACTION_CREDITS  = "action_credits"
     }
 }

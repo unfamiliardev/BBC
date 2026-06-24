@@ -8,6 +8,7 @@ package com.unfamiliardev.bbc.ui.player
 
 import android.content.Context
 import android.content.Intent
+import com.unfamiliardev.bbc.util.LocaleHelper
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
@@ -29,6 +30,10 @@ class PlayerActivity : FragmentActivity() {
 
     private val konamiDetector = KonamiCodeDetector {
         startActivity(Intent(this, CreditsActivity::class.java))
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

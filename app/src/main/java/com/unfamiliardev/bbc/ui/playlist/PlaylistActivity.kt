@@ -6,8 +6,10 @@
 
 package com.unfamiliardev.bbc.ui.playlist
 
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import com.unfamiliardev.bbc.util.LocaleHelper
 import android.view.KeyEvent
 import android.view.LayoutInflater
 import android.view.View
@@ -31,6 +33,10 @@ class PlaylistActivity : FragmentActivity() {
 
     private val konamiDetector = KonamiCodeDetector {
         startActivity(Intent(this, CreditsActivity::class.java))
+    }
+
+    override fun attachBaseContext(newBase: Context) {
+        super.attachBaseContext(LocaleHelper.onAttach(newBase))
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

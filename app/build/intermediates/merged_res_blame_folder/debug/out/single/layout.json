@@ -1,0 +1,26 @@
+[
+    {
+        "merged": "com.unfamiliardev.bbc.app-mergeDebugResources-36:/layout/item_playlist.xml",
+        "source": "com.unfamiliardev.bbc.app-main-39:/layout/item_playlist.xml"
+    },
+    {
+        "merged": "com.unfamiliardev.bbc.app-mergeDebugResources-36:/layout/item_action.xml",
+        "source": "com.unfamiliardev.bbc.app-main-39:/layout/item_action.xml"
+    },
+    {
+        "merged": "com.unfamiliardev.bbc.app-mergeDebugResources-36:/layout/activity_player.xml",
+        "source": "com.unfamiliardev.bbc.app-main-39:/layout/activity_player.xml"
+    },
+    {
+        "merged": "com.unfamiliardev.bbc.app-mergeDebugResources-36:/layout/activity_main.xml",
+        "source": "com.unfamiliardev.bbc.app-main-39:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.unfamiliardev.bbc.app-mergeDebugResources-36:/layout/activity_playlist.xml",
+        "source": "com.unfamiliardev.bbc.app-main-39:/layout/activity_playlist.xml"
+    },
+    {
+        "merged": "com.unfamiliardev.bbc.app-mergeDebugResources-36:/layout/activity_credits.xml",
+        "source": "com.unfamiliardev.bbc.app-main-39:/layout/activity_credits.xml"
+    }
+]

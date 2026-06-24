@@ -7,11 +7,21 @@
         <item name="android:colorAccent">@color/accent</item>
         <item name="android:textColorPrimary">@color/primary_text</item>
         <item name="android:textColorSecondary">@color/secondary_text</item>
+        <item name="android:colorControlHighlight">#33818CF8</item>
     </style>
 
     <style name="Theme.BBC.Credits" parent="Theme.BBC">
         <item name="android:windowBackground">@color/credits_bg</item>
         <item name="android:windowAnimationStyle">@null</item>
+    </style>
+
+    <!-- GuidedStep (Settings) uses a dark overlay matching the app palette -->
+    <style name="Theme.BBC.GuidedStep" parent="Theme.Leanback.GuidedStep">
+        <item name="android:windowBackground">@color/background</item>
+        <item name="android:colorPrimary">@color/brand</item>
+        <item name="android:colorAccent">@color/accent</item>
+        <item name="android:textColorPrimary">@color/primary_text</item>
+        <item name="android:textColorSecondary">@color/secondary_text</item>
     </style>
 
 </resources>

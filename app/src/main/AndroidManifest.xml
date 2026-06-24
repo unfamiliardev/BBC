@@ -12,6 +12,7 @@
         android:required="true" />
 
     <application
+        android:name=".BBCApplication"
         android:allowBackup="true"
         android:banner="@drawable/app_banner"
         android:icon="@drawable/app_banner"
@@ -45,6 +46,12 @@
             android:name=".ui.playlist.PlaylistActivity"
             android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize"
             android:exported="false" />
+
+        <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize"
+            android:exported="false"
+            android:theme="@style/Theme.BBC.GuidedStep" />
 
         <activity
             android:name=".ui.credits.CreditsActivity"

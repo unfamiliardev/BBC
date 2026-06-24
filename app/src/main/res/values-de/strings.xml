@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">BBC</string>
+
+    <string name="category_all">Alle Sender (%d)</string>
+    <string name="getting_started">Erste Schritte</string>
+    <string name="add_first_playlist">+ Erste Playlist hinzufügen</string>
+    <string name="manage_playlists">Playlists verwalten</string>
+    <string name="manage_playlists_action">Playlist hinzufügen / verwalten</string>
+    <string name="refresh">Sender aktualisieren</string>
+    <string name="credits">Über</string>
+    <string name="settings">Einstellungen</string>
+
+    <string name="no_playlists">Noch keine Playlists.\nM3U URL eingeben und Hinzufügen tippen.</string>
+    <string name="hint_playlist_name">Name (optional)</string>
+    <string name="hint_playlist_url">M3U URL (http://…)</string>
+    <string name="add">Hinzufügen</string>
+    <string name="delete">Entfernen</string>
+
+    <string name="error_loading">Fehler beim Laden: %s</string>
+
+    <string name="developer_label">Entwickler</string>
+    <string name="dismiss">Schließen</string>
+
+    <string name="settings_title">Einstellungen</string>
+    <string name="settings_desc">BBC konfigurieren</string>
+    <string name="setting_language">Sprache</string>
+    <string name="setting_language_desc">App-Sprache auswählen</string>
+    <string name="setting_autoplay">Beim Start fortsetzen</string>
+    <string name="setting_autoplay_desc">Letzten Sender beim Öffnen der App abspielen</string>
+    <string name="setting_clear_data">Alle Playlists löschen</string>
+    <string name="setting_clear_data_desc">Alle gespeicherten M3U-Quellen entfernen</string>
+    <string name="setting_about">Über</string>
+    <string name="confirm_clear">Alle Playlists gelöscht</string>
+    <string name="autoplay_enabled">An</string>
+    <string name="autoplay_disabled">Aus</string>
+
+    <string name="lang_system">Systemsprache</string>
+    <string name="lang_en">English</string>
+    <string name="lang_ru">Русский</string>
+    <string name="lang_sk">Slovenčina</string>
+    <string name="lang_de">Deutsch</string>
+</resources>

@@ -48,7 +48,7 @@ class ChannelCardPresenter : Presenter() {
     }
 
     companion object {
-        private const val CARD_WIDTH = 176
-        private const val CARD_HEIGHT = 99
+        private const val CARD_WIDTH = 220
+        private const val CARD_HEIGHT = 124
     }
 }

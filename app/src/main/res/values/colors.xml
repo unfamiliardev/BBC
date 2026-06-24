@@ -1,10 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="background">#0D0D0D</color>
-    <color name="surface">#161616</color>
-    <color name="brand">#1A1A2E</color>
-    <color name="primary_text">#EFEFEF</color>
-    <color name="secondary_text">#777777</color>
-    <color name="accent">#4FC3F7</color>
-    <color name="credits_bg">#07070F</color>
+    <!-- Backgrounds -->
+    <color name="background">#0A0A0F</color>
+    <color name="surface">#13131C</color>
+    <color name="card_bg">#1A1A28</color>
+
+    <!-- Brand / accent -->
+    <color name="brand">#1E1B4B</color>
+    <color name="accent">#818CF8</color>
+    <color name="accent_dim">#3730A3</color>
+
+    <!-- Text -->
+    <color name="primary_text">#F0F0F8</color>
+    <color name="secondary_text">#6B7280</color>
+
+    <!-- Misc -->
+    <color name="divider">#1F1F30</color>
+    <color name="credits_bg">#07070E</color>
+    <color name="error">#F87171</color>
 </resources>
