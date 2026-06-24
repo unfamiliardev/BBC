@@ -22,17 +22,14 @@ import com.unfamiliardev.bbc.ui.player.PlayerActivity
 import com.unfamiliardev.bbc.ui.playlist.PlaylistActivity
 import com.unfamiliardev.bbc.ui.settings.SettingsActivity
 import com.unfamiliardev.bbc.util.FavouritesStore
+import com.unfamiliardev.bbc.util.RecentlyWatchedStore
 
 class BrowseFragment : BrowseSupportFragment() {
 
     private lateinit var viewModel: BrowseViewModel
     private val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
     private var currentChannels: List<Channel> = emptyList()
-
-    // Tracks the currently D-pad-focused channel for DPAD_CENTER long press
     private var focusedChannel: Channel? = null
-
-    // Row position to restore after adapter rebuilds
     private var savedRowPosition = 0
 
     private fun cardPresenter() = ChannelCardPresenter { channel ->
@@ -46,7 +43,16 @@ class BrowseFragment : BrowseSupportFragment() {
         )
     }
 
-    /** Called by MainActivity when DPAD_CENTER is long-pressed. Returns true if handled. */
+    private fun launchPlayer(channel: Channel) {
+        startActivity(Intent(requireContext(), PlayerActivity::class.java).apply {
+            putExtra(PlayerActivity.EXTRA_URL, channel.url)
+            putExtra(PlayerActivity.EXTRA_NAME, channel.name)
+            putExtra(PlayerActivity.EXTRA_LOGO, channel.logoUrl)
+            putExtra(PlayerActivity.EXTRA_GROUP, channel.group)
+            putExtra(PlayerActivity.EXTRA_PLAYLIST_ID, channel.playlistId)
+        })
+    }
+
     fun showOptionsForFocused(): Boolean {
         val channel = focusedChannel ?: return false
         openOptions(channel)
@@ -65,17 +71,13 @@ class BrowseFragment : BrowseSupportFragment() {
 
         setOnItemViewClickedListener { _, item, _, _ ->
             when (item) {
-                is Channel -> startActivity(
-                    Intent(requireContext(), PlayerActivity::class.java).apply {
-                        putExtra(PlayerActivity.EXTRA_URL, item.url)
-                        putExtra(PlayerActivity.EXTRA_NAME, item.name)
-                    }
-                )
+                is Channel    -> launchPlayer(item)
                 is ActionItem -> when (item.id) {
-                    ACTION_MANAGE   -> startActivity(Intent(requireContext(), PlaylistActivity::class.java))
-                    ACTION_REFRESH  -> viewModel.refresh()
-                    ACTION_SETTINGS -> startActivity(Intent(requireContext(), SettingsActivity::class.java))
-                    ACTION_CREDITS  -> startActivity(Intent(requireContext(), CreditsActivity::class.java))
+                    ACTION_MANAGE      -> startActivity(Intent(requireContext(), PlaylistActivity::class.java))
+                    ACTION_REFRESH     -> viewModel.refresh()
+                    ACTION_SURPRISE_ME -> surpriseMe()
+                    ACTION_SETTINGS    -> startActivity(Intent(requireContext(), SettingsActivity::class.java))
+                    ACTION_CREDITS     -> startActivity(Intent(requireContext(), CreditsActivity::class.java))
                 }
             }
         }
@@ -83,6 +85,11 @@ class BrowseFragment : BrowseSupportFragment() {
         setOnSearchClickedListener {
             startActivity(Intent(requireContext(), PlaylistActivity::class.java))
         }
+    }
+
+    private fun surpriseMe() {
+        if (currentChannels.isEmpty()) return
+        launchPlayer(currentChannels.random())
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -117,7 +124,6 @@ class BrowseFragment : BrowseSupportFragment() {
 
     override fun onResume() {
         super.onResume()
-        // Rebuild so Favourites / My List reflect changes made in ChannelOptionsFragment
         buildRows(currentChannels)
     }
 
@@ -125,7 +131,15 @@ class BrowseFragment : BrowseSupportFragment() {
         rowsAdapter.clear()
         var rowId = 0L
 
-        // Favourites row
+        // Recently Watched
+        val recent = RecentlyWatchedStore.get(requireContext())
+        if (recent.isNotEmpty()) {
+            val recentAdapter = ArrayObjectAdapter(cardPresenter())
+            recentAdapter.addAll(0, recent)
+            rowsAdapter.add(ListRow(HeaderItem(rowId++, getString(R.string.category_recent)), recentAdapter))
+        }
+
+        // Favourites
         val favs = FavouritesStore.getFavourites(requireContext())
         if (favs.isNotEmpty()) {
             val favsAdapter = ArrayObjectAdapter(cardPresenter())
@@ -133,7 +147,7 @@ class BrowseFragment : BrowseSupportFragment() {
             rowsAdapter.add(ListRow(HeaderItem(rowId++, getString(R.string.category_favourites)), favsAdapter))
         }
 
-        // My List row
+        // My List
         val myList = FavouritesStore.getMyList(requireContext())
         if (myList.isNotEmpty()) {
             val myListAdapter = ArrayObjectAdapter(cardPresenter())
@@ -164,21 +178,24 @@ class BrowseFragment : BrowseSupportFragment() {
 
         // Actions row
         val actionsAdapter = ArrayObjectAdapter(ActionPresenter())
-        actionsAdapter.add(ActionItem(ACTION_MANAGE,   getString(R.string.manage_playlists_action)))
-        actionsAdapter.add(ActionItem(ACTION_REFRESH,  getString(R.string.refresh)))
-        actionsAdapter.add(ActionItem(ACTION_SETTINGS, getString(R.string.settings)))
-        actionsAdapter.add(ActionItem(ACTION_CREDITS,  getString(R.string.credits)))
+        actionsAdapter.add(ActionItem(ACTION_MANAGE,      getString(R.string.manage_playlists_action)))
+        actionsAdapter.add(ActionItem(ACTION_REFRESH,     getString(R.string.refresh)))
+        if (currentChannels.isNotEmpty()) {
+            actionsAdapter.add(ActionItem(ACTION_SURPRISE_ME, getString(R.string.surprise_me)))
+        }
+        actionsAdapter.add(ActionItem(ACTION_SETTINGS,    getString(R.string.settings)))
+        actionsAdapter.add(ActionItem(ACTION_CREDITS,     getString(R.string.credits)))
         rowsAdapter.add(ListRow(HeaderItem(rowId, getString(R.string.settings)), actionsAdapter))
 
-        // Restore scroll position after layout pass
         val target = savedRowPosition.coerceAtMost(rowsAdapter.size() - 1).coerceAtLeast(0)
         view?.post { setSelectedPosition(target, false) }
     }
 
     companion object {
-        private const val ACTION_MANAGE   = "action_manage"
-        private const val ACTION_REFRESH  = "action_refresh"
-        private const val ACTION_SETTINGS = "action_settings"
-        private const val ACTION_CREDITS  = "action_credits"
+        private const val ACTION_MANAGE      = "action_manage"
+        private const val ACTION_REFRESH     = "action_refresh"
+        private const val ACTION_SURPRISE_ME = "action_surprise"
+        private const val ACTION_SETTINGS    = "action_settings"
+        private const val ACTION_CREDITS     = "action_credits"
     }
 }

@@ -41,6 +41,9 @@
     <string name="autoplay_enabled">On</string>
     <string name="autoplay_disabled">Off</string>
 
+    <string name="category_recent">Recently Watched</string>
+    <string name="surprise_me">Surprise Me</string>
+
     <!-- Channel options (long press) -->
 <string name="add_favourite">Add to Favourites</string>
     <string name="remove_favourite">Remove from Favourites</string>

@@ -35,6 +35,8 @@
     <string name="autoplay_enabled">Включено</string>
     <string name="autoplay_disabled">Выключено</string>
 
+    <string name="category_recent">Недавно просмотренные</string>
+    <string name="surprise_me">Удиви меня</string>
     <string name="add_favourite">Добавить в избранное</string>
     <string name="remove_favourite">Убрать из избранного</string>
     <string name="add_my_list">Добавить в мой список</string>

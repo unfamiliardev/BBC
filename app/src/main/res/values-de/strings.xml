@@ -35,6 +35,8 @@
     <string name="autoplay_enabled">An</string>
     <string name="autoplay_disabled">Aus</string>
 
+    <string name="category_recent">Zuletzt gesehen</string>
+    <string name="surprise_me">Überrasch mich</string>
     <string name="add_favourite">Zu Favoriten hinzufügen</string>
     <string name="remove_favourite">Aus Favoriten entfernen</string>
     <string name="add_my_list">Zu meiner Liste hinzufügen</string>

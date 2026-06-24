@@ -20,7 +20,9 @@ import androidx.media3.common.Player
 import androidx.media3.exoplayer.ExoPlayer
 import com.unfamiliardev.bbc.databinding.ActivityPlayerBinding
 import com.unfamiliardev.bbc.ui.credits.CreditsActivity
+import com.unfamiliardev.bbc.data.model.Channel
 import com.unfamiliardev.bbc.util.KonamiCodeDetector
+import com.unfamiliardev.bbc.util.RecentlyWatchedStore
 
 class PlayerActivity : FragmentActivity() {
 
@@ -48,6 +50,13 @@ class PlayerActivity : FragmentActivity() {
         binding.channelTitle.text = name
 
         saveLastPlayed(url, name)
+        RecentlyWatchedStore.record(
+            this,
+            Channel(id = url, name = name, url = url,
+                logoUrl = intent.getStringExtra(EXTRA_LOGO),
+                group = intent.getStringExtra(EXTRA_GROUP) ?: "",
+                playlistId = intent.getLongExtra(EXTRA_PLAYLIST_ID, -1L))
+        )
         initPlayer(url)
     }
 
@@ -111,6 +120,9 @@ class PlayerActivity : FragmentActivity() {
     companion object {
         const val EXTRA_URL = "extra_url"
         const val EXTRA_NAME = "extra_name"
+        const val EXTRA_LOGO = "extra_logo"
+        const val EXTRA_GROUP = "extra_group"
+        const val EXTRA_PLAYLIST_ID = "extra_playlist_id"
         const val PREFS_NAME = "bbc_player"
         const val KEY_LAST_URL = "last_url"
         const val KEY_LAST_NAME = "last_name"

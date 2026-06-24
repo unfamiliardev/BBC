@@ -35,6 +35,8 @@
     <string name="autoplay_enabled">Zapnuté</string>
     <string name="autoplay_disabled">Vypnuté</string>
 
+    <string name="category_recent">Nedávno sledované</string>
+    <string name="surprise_me">Prekvapiť ma</string>
     <string name="add_favourite">Pridať do obľúbených</string>
     <string name="remove_favourite">Odstrániť z obľúbených</string>
     <string name="add_my_list">Pridať do môjho zoznamu</string>
