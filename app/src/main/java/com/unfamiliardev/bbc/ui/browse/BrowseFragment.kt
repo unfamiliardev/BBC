@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.leanback.app.BrowseSupportFragment
+import androidx.leanback.app.GuidedStepSupportFragment
 import androidx.leanback.widget.*
 import androidx.lifecycle.ViewModelProvider
 import com.unfamiliardev.bbc.R
@@ -20,11 +21,20 @@ import com.unfamiliardev.bbc.ui.credits.CreditsActivity
 import com.unfamiliardev.bbc.ui.player.PlayerActivity
 import com.unfamiliardev.bbc.ui.playlist.PlaylistActivity
 import com.unfamiliardev.bbc.ui.settings.SettingsActivity
+import com.unfamiliardev.bbc.util.FavouritesStore
 
 class BrowseFragment : BrowseSupportFragment() {
 
     private lateinit var viewModel: BrowseViewModel
     private val rowsAdapter = ArrayObjectAdapter(ListRowPresenter())
+    private var currentChannels: List<Channel> = emptyList()
+
+    private fun cardPresenter() = ChannelCardPresenter { channel ->
+        GuidedStepSupportFragment.add(
+            requireActivity().supportFragmentManager,
+            ChannelOptionsFragment.newInstance(channel)
+        )
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -63,7 +73,10 @@ class BrowseFragment : BrowseSupportFragment() {
 
         viewModel = ViewModelProvider(this)[BrowseViewModel::class.java]
 
-        viewModel.channels.observe(viewLifecycleOwner) { channels -> buildRows(channels) }
+        viewModel.channels.observe(viewLifecycleOwner) { channels ->
+            currentChannels = channels
+            buildRows(channels)
+        }
 
         viewModel.loading.observe(viewLifecycleOwner) { loading ->
             if (loading) progressBarManager.show() else progressBarManager.hide()
@@ -76,39 +89,62 @@ class BrowseFragment : BrowseSupportFragment() {
         }
     }
 
+    override fun onResume() {
+        super.onResume()
+        // Rebuild rows so Favourites / My List reflect any changes made in ChannelOptionsFragment
+        buildRows(currentChannels)
+    }
+
     private fun buildRows(channels: List<Channel>) {
         rowsAdapter.clear()
+        var rowId = 0L
+
+        // Favourites row
+        val favs = FavouritesStore.getFavourites(requireContext())
+        if (favs.isNotEmpty()) {
+            val favsAdapter = ArrayObjectAdapter(cardPresenter())
+            favsAdapter.addAll(0, favs)
+            rowsAdapter.add(ListRow(HeaderItem(rowId++, getString(R.string.category_favourites)), favsAdapter))
+        }
+
+        // My List row
+        val myList = FavouritesStore.getMyList(requireContext())
+        if (myList.isNotEmpty()) {
+            val myListAdapter = ArrayObjectAdapter(cardPresenter())
+            myListAdapter.addAll(0, myList)
+            rowsAdapter.add(ListRow(HeaderItem(rowId++, getString(R.string.category_my_list)), myListAdapter))
+        }
 
         if (channels.isEmpty()) {
             val emptyAdapter = ArrayObjectAdapter(ActionPresenter())
             emptyAdapter.add(ActionItem(ACTION_MANAGE, getString(R.string.add_first_playlist)))
-            rowsAdapter.add(ListRow(HeaderItem(0, getString(R.string.getting_started)), emptyAdapter))
+            rowsAdapter.add(ListRow(HeaderItem(rowId++, getString(R.string.getting_started)), emptyAdapter))
         } else {
-            val allAdapter = ArrayObjectAdapter(ChannelCardPresenter())
+            // All Channels
+            val allAdapter = ArrayObjectAdapter(cardPresenter())
             allAdapter.addAll(0, channels)
             rowsAdapter.add(
-                ListRow(HeaderItem(0, getString(R.string.category_all, channels.size)), allAdapter)
+                ListRow(HeaderItem(rowId++, getString(R.string.category_all, channels.size)), allAdapter)
             )
+
+            // Per-category rows sorted A-Z
             channels.groupBy { it.group }
                 .entries
                 .sortedBy { it.key }
-                .forEachIndexed { idx, (group, grouped) ->
-                    val adapter = ArrayObjectAdapter(ChannelCardPresenter())
+                .forEach { (group, grouped) ->
+                    val adapter = ArrayObjectAdapter(cardPresenter())
                     adapter.addAll(0, grouped)
-                    rowsAdapter.add(
-                        ListRow(HeaderItem((idx + 1).toLong(), "$group (${grouped.size})"), adapter)
-                    )
+                    rowsAdapter.add(ListRow(HeaderItem(rowId++, "$group (${grouped.size})"), adapter))
                 }
         }
 
+        // Actions row
         val actionsAdapter = ArrayObjectAdapter(ActionPresenter())
         actionsAdapter.add(ActionItem(ACTION_MANAGE,   getString(R.string.manage_playlists_action)))
         actionsAdapter.add(ActionItem(ACTION_REFRESH,  getString(R.string.refresh)))
         actionsAdapter.add(ActionItem(ACTION_SETTINGS, getString(R.string.settings)))
         actionsAdapter.add(ActionItem(ACTION_CREDITS,  getString(R.string.credits)))
-        rowsAdapter.add(
-            ListRow(HeaderItem(rowsAdapter.size().toLong(), getString(R.string.settings)), actionsAdapter)
-        )
+        rowsAdapter.add(ListRow(HeaderItem(rowId, getString(R.string.settings)), actionsAdapter))
     }
 
     companion object {
