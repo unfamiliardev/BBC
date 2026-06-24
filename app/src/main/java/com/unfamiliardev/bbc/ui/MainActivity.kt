@@ -11,13 +11,18 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
 import androidx.fragment.app.FragmentActivity
+import androidx.leanback.app.GuidedStepSupportFragment
+import androidx.lifecycle.lifecycleScope
 import com.unfamiliardev.bbc.R
 import com.unfamiliardev.bbc.ui.browse.BrowseFragment
 import com.unfamiliardev.bbc.ui.credits.CreditsActivity
 import com.unfamiliardev.bbc.ui.player.PlayerActivity
+import com.unfamiliardev.bbc.ui.update.UpdateFragment
 import com.unfamiliardev.bbc.util.AppSettings
 import com.unfamiliardev.bbc.util.KonamiCodeDetector
 import com.unfamiliardev.bbc.util.LocaleHelper
+import com.unfamiliardev.bbc.util.UpdateChecker
+import kotlinx.coroutines.launch
 
 class MainActivity : FragmentActivity() {
 
@@ -25,7 +30,6 @@ class MainActivity : FragmentActivity() {
         startActivity(Intent(this, CreditsActivity::class.java))
     }
 
-    // True once we've handled a long press so the subsequent KEY_UP doesn't also fire a click
     private var longPressConsumed = false
 
     override fun attachBaseContext(newBase: Context) {
@@ -49,6 +53,18 @@ class MainActivity : FragmentActivity() {
                     })
                 }
             }
+
+            checkForUpdate()
+        }
+    }
+
+    private fun checkForUpdate() {
+        lifecycleScope.launch {
+            val info = UpdateChecker.check(this@MainActivity) ?: return@launch
+            GuidedStepSupportFragment.add(
+                supportFragmentManager,
+                UpdateFragment.newInstance(info)
+            )
         }
     }
 
@@ -58,13 +74,11 @@ class MainActivity : FragmentActivity() {
         when (event.action) {
             KeyEvent.ACTION_DOWN -> {
                 if (event.keyCode == KeyEvent.KEYCODE_DPAD_CENTER && event.repeatCount == 1) {
-                    // First key-repeat fires ~500 ms after initial press — treat as long press
                     if (browse?.showOptionsForFocused() == true) {
                         longPressConsumed = true
                         return true
                     }
                 }
-                // Swallow subsequent repeats after we've consumed the long press
                 if (longPressConsumed && event.keyCode == KeyEvent.KEYCODE_DPAD_CENTER) return true
             }
             KeyEvent.ACTION_UP -> {

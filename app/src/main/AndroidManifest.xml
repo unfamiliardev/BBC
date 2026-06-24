@@ -3,6 +3,7 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
 
     <uses-feature
         android:name="android.hardware.touchscreen"
@@ -39,9 +40,10 @@
 
         <activity
             android:name=".ui.player.PlayerActivity"
-            android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize"
+            android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize|smallestScreenSize|screenLayout"
             android:exported="false"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"
+            android:supportsPictureInPicture="true" />
 
         <activity
             android:name=".ui.playlist.PlaylistActivity"
@@ -59,6 +61,16 @@
             android:configChanges="keyboard|keyboardHidden|navigation|orientation|screenSize"
             android:exported="false"
             android:theme="@style/Theme.BBC.Credits" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
 
     </application>
 

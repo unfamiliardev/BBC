@@ -52,6 +52,16 @@
     <string name="category_favourites">Favourites</string>
     <string name="category_my_list">My List</string>
 
+    <!-- Auto-update -->
+    <string name="update_title">Update Available</string>
+    <string name="update_desc">Version %s is ready to install.</string>
+    <string name="update_install_now">Download &amp; Install Now</string>
+    <string name="update_later">Remind Me Later</string>
+    <string name="update_skip_version">Skip This Version</string>
+    <string name="update_downloading">Downloading…</string>
+    <string name="update_downloading_progress">Downloading… %d%%</string>
+    <string name="update_download_failed">Download failed. Try again later.</string>
+
     <!-- Languages -->
     <string name="lang_system">System default</string>
     <string name="lang_en">English</string>
