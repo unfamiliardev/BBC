@@ -212,21 +212,27 @@ class PlayerActivity : FragmentActivity() {
 
         TrackSelectorFragment.tracks = tracks
         TrackSelectorFragment.onTrackSelected = { groupIdx, trackIdx ->
-            val exoPlayer = player ?: return@onTrackSelected
-            if (groupIdx == -1) {
-                exoPlayer.trackSelectionParameters = exoPlayer.trackSelectionParameters
-                    .buildUpon()
-                    .setTrackTypeDisabled(targetType, true)
-                    .build()
-            } else {
-                val group = exoPlayer.currentTracks.groups.getOrNull(groupIdx) ?: return@onTrackSelected
-                exoPlayer.trackSelectionParameters = exoPlayer.trackSelectionParameters
-                    .buildUpon()
-                    .setTrackTypeDisabled(targetType, false)
-                    .setOverrideForType(
-                        TrackSelectionParameters.TrackSelectionOverride(group.mediaTrackGroup, trackIdx)
-                    )
-                    .build()
+            val exoPlayer = player
+            if (exoPlayer != null) {
+                if (groupIdx == -1) {
+                    exoPlayer.trackSelectionParameters = exoPlayer.trackSelectionParameters
+                        .buildUpon()
+                        .setTrackTypeDisabled(targetType, true)
+                        .build()
+                } else {
+                    val group = exoPlayer.currentTracks.groups.getOrNull(groupIdx)
+                    if (group != null) {
+                        exoPlayer.trackSelectionParameters = exoPlayer.trackSelectionParameters
+                            .buildUpon()
+                            .setTrackTypeDisabled(targetType, false)
+                            .addOverride(
+                                TrackSelectionParameters.TrackSelectionOverride(
+                                    group.mediaTrackGroup, listOf(trackIdx)
+                                )
+                            )
+                            .build()
+                    }
+                }
             }
         }
 
