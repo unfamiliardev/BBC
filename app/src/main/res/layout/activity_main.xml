@@ -21,7 +21,7 @@
         <ImageView
             android:layout_width="40dp"
             android:layout_height="28dp"
-            android:src="@mipmap/ic_launcher"
+            android:src="@drawable/ic_bbc_logo"
             android:scaleType="fitCenter"
             android:layout_marginBottom="28dp"
             android:contentDescription="@null" />
