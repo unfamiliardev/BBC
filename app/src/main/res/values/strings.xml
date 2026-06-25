@@ -24,6 +24,8 @@
 
     <string name="settings_title">Settings</string>
     <string name="settings_desc">Configure BBC</string>
+    <string name="setting_sources">Manage Sources</string>
+    <string name="setting_sources_desc">Add or remove M3U playlist URLs</string>
     <string name="setting_language">Language</string>
     <string name="setting_language_desc">Choose the app language</string>
     <string name="setting_autoplay">Resume on startup</string>

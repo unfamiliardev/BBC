@@ -17,6 +17,7 @@ import com.unfamiliardev.bbc.BuildConfig
 import com.unfamiliardev.bbc.R
 import com.unfamiliardev.bbc.data.repository.PlaylistRepository
 import com.unfamiliardev.bbc.ui.credits.CreditsActivity
+import com.unfamiliardev.bbc.ui.playlist.PlaylistActivity
 import com.unfamiliardev.bbc.util.AppSettings
 import kotlinx.coroutines.launch
 
@@ -31,6 +32,13 @@ class MainSettingsFragment : GuidedStepSupportFragment() {
         )
 
     override fun onCreateActions(actions: MutableList<GuidedAction>, savedInstanceState: Bundle?) {
+        actions.add(
+            GuidedAction.Builder(requireContext())
+                .id(ACTION_SOURCES)
+                .title(getString(R.string.setting_sources))
+                .description(getString(R.string.setting_sources_desc))
+                .build()
+        )
         actions.add(
             GuidedAction.Builder(requireContext())
                 .id(ACTION_LANGUAGE)
@@ -71,6 +79,8 @@ class MainSettingsFragment : GuidedStepSupportFragment() {
 
     override fun onGuidedActionClicked(action: GuidedAction) {
         when (action.id) {
+            ACTION_SOURCES -> startActivity(Intent(requireContext(), PlaylistActivity::class.java))
+
             ACTION_LANGUAGE -> add(parentFragmentManager, LanguagePickerFragment())
 
             ACTION_AUTOPLAY -> {
@@ -109,6 +119,7 @@ class MainSettingsFragment : GuidedStepSupportFragment() {
         else getString(R.string.autoplay_disabled)
 
     companion object {
+        private const val ACTION_SOURCES  = 0L
         private const val ACTION_LANGUAGE = 1L
         private const val ACTION_AUTOPLAY = 2L
         private const val ACTION_CLEAR = 3L
