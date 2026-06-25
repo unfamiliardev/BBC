@@ -25,53 +25,81 @@
         android:layout_gravity="center"
         android:background="#AA000000"
         android:padding="16dp"
-        android:textColor="#FF5252"
+        android:textColor="@color/error"
         android:textSize="16sp"
         android:visibility="gone" />
 
-    <!-- Channel title + sleep countdown row -->
+    <!-- Bottom scrim gradient -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_gravity="bottom"
+        android:background="@drawable/player_bottom_scrim" />
+
+    <!-- Bottom row: title + sleep -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="24dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="28dp"
+        android:layout_marginStart="28dp"
+        android:layout_marginEnd="28dp"
         android:orientation="horizontal"
         android:gravity="center_vertical">
 
-        <TextView
-            android:id="@+id/channel_title"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="#AA000000"
-            android:padding="8dp"
-            android:textColor="@android:color/white"
-            android:textSize="20sp" />
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/channel_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:shadowColor="#AA000000"
+                android:shadowDx="1"
+                android:shadowDy="1"
+                android:shadowRadius="4" />
+
+            <TextView
+                android:id="@+id/channel_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#AAFFFFFF"
+                android:textSize="13sp"
+                android:visibility="gone"
+                android:layout_marginTop="2dp" />
+
+        </LinearLayout>
 
         <TextView
             android:id="@+id/sleep_countdown"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
-            android:background="#AA000000"
-            android:drawablePadding="6dp"
-            android:padding="8dp"
+            android:layout_marginStart="12dp"
+            android:background="#99000000"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
             android:textColor="#FFCC88"
-            android:textSize="14sp"
+            android:textSize="13sp"
             android:visibility="gone" />
 
     </LinearLayout>
 
-    <!-- Stream info overlay -->
+    <!-- Stream info overlay (top-left) -->
     <LinearLayout
         android:id="@+id/stream_info_overlay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|start"
         android:layout_margin="24dp"
-        android:background="#DD000000"
+        android:background="@drawable/info_overlay_bg"
         android:orientation="vertical"
         android:padding="14dp"
         android:visibility="gone">
@@ -114,7 +142,7 @@
 
         <TextView
             android:id="@+id/info_url"
-            android:layout_width="220dp"
+            android:layout_width="240dp"
             android:layout_height="wrap_content"
             android:textColor="#888888"
             android:textSize="11sp"
@@ -124,17 +152,20 @@
 
     </LinearLayout>
 
-    <!-- Aspect ratio badge -->
+    <!-- Aspect ratio badge (top-right) -->
     <TextView
         android:id="@+id/aspect_badge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top|end"
         android:layout_margin="24dp"
-        android:background="#AA000000"
-        android:padding="8dp"
+        android:background="#99000000"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:paddingTop="6dp"
+        android:paddingBottom="6dp"
         android:textColor="#FFFFFF"
-        android:textSize="14sp"
+        android:textSize="13sp"
         android:visibility="gone" />
 
 </FrameLayout>

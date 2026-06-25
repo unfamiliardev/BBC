@@ -1,80 +1,148 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
-    android:orientation="vertical"
-    android:padding="32dp">
+    android:background="@drawable/bg_gradient"
+    android:orientation="horizontal">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
-        android:text="@string/manage_playlists"
-        android:textColor="@color/primary_text"
-        android:textSize="28sp" />
-
+    <!-- Add source panel -->
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal">
+        android:layout_width="380dp"
+        android:layout_height="match_parent"
+        android:background="@color/sidebar_bg"
+        android:orientation="vertical"
+        android:padding="32dp">
 
-        <EditText
-            android:id="@+id/input_name"
-            android:layout_width="0dp"
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:layout_weight="1"
-            android:background="@drawable/edit_text_bg"
-            android:hint="@string/hint_playlist_name"
-            android:inputType="text"
-            android:padding="12dp"
-            android:textColor="@color/primary_text"
-            android:textColorHint="@color/secondary_text" />
+            android:text="Add Source"
+            android:textColor="@color/accent"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="6dp" />
+
+        <View
+            android:layout_width="40dp"
+            android:layout_height="2dp"
+            android:background="@color/accent"
+            android:layout_marginBottom="28dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="M3U URL"
+            android:textColor="@color/secondary_text"
+            android:textSize="11sp"
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="6dp" />
 
         <EditText
             android:id="@+id/input_url"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:layout_weight="2"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
             android:background="@drawable/edit_text_bg"
-            android:hint="@string/hint_playlist_url"
-            android:imeOptions="actionDone"
+            android:hint="http://example.com/playlist.m3u"
+            android:imeOptions="actionNext"
             android:inputType="textUri"
-            android:padding="12dp"
+            android:padding="14dp"
             android:singleLine="true"
             android:textColor="@color/primary_text"
-            android:textColorHint="@color/secondary_text" />
+            android:textColorHint="@color/secondary_text"
+            android:textSize="13sp"
+            android:layout_marginBottom="20dp" />
 
-        <Button
-            android:id="@+id/add_button"
-            android:layout_width="wrap_content"
+        <TextView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:text="Name (optional)"
+            android:textColor="@color/secondary_text"
+            android:textSize="11sp"
+            android:letterSpacing="0.1"
+            android:layout_marginBottom="6dp" />
+
+        <EditText
+            android:id="@+id/input_name"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/edit_text_bg"
+            android:hint="My Playlist"
+            android:imeOptions="actionDone"
+            android:inputType="text"
+            android:padding="14dp"
+            android:textColor="@color/primary_text"
+            android:textColorHint="@color/secondary_text"
+            android:textSize="13sp"
+            android:layout_marginBottom="28dp" />
+
+        <TextView
+            android:id="@+id/add_button"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/item_focused_bg"
             android:focusable="true"
-            android:text="@string/add" />
+            android:gravity="center"
+            android:text="ADD SOURCE"
+            android:textColor="@color/primary_text"
+            android:textSize="13sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.08" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Supports M3U, M3U8, and Xtream URLs."
+            android:textColor="@color/secondary_text"
+            android:textSize="12sp" />
 
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/empty_state"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:text="@string/no_playlists"
-        android:textColor="@color/secondary_text"
-        android:textSize="16sp"
-        android:visibility="gone" />
-
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/playlist_recycler"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
+    <!-- Sources list -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
         android:layout_weight="1"
-        android:descendantFocusability="afterDescendants"
-        android:focusable="true" />
+        android:orientation="vertical"
+        android:padding="32dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Your Sources"
+            android:textColor="@color/primary_text"
+            android:textSize="20sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="6dp" />
+
+        <View
+            android:layout_width="40dp"
+            android:layout_height="2dp"
+            android:background="@color/accent"
+            android:layout_marginBottom="20dp" />
+
+        <TextView
+            android:id="@+id/empty_state"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/no_playlists"
+            android:textColor="@color/secondary_text"
+            android:textSize="16sp"
+            android:visibility="gone" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/playlist_recycler"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:descendantFocusability="afterDescendants"
+            android:focusable="true"
+            android:overScrollMode="never" />
+
+    </LinearLayout>
 
 </LinearLayout>

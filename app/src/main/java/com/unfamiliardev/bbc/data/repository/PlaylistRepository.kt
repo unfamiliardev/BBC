@@ -1,5 +1,5 @@
-﻿/*
- * BBC â€” Open-source Android TV IPTV client
+/*
+ * BBC — Open-source Android TV IPTV client
  * Copyright (c) 2026 unfamiliardev
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -7,6 +7,7 @@
 package com.unfamiliardev.bbc.data.repository
 
 import android.content.Context
+import com.unfamiliardev.bbc.data.DefaultPlaylist
 import com.unfamiliardev.bbc.data.db.AppDatabase
 import com.unfamiliardev.bbc.data.db.PlaylistEntity
 import com.unfamiliardev.bbc.data.model.Channel
@@ -41,13 +42,18 @@ class PlaylistRepository(context: Context) {
         val all = mutableListOf<Channel>()
         for (entity in dao.getAllOnce()) {
             try {
-                all.addAll(M3UParser.parse(fetchUrl(entity.url), entity.id))
+                val content = resolveContent(entity.url)
+                all.addAll(M3UParser.parse(content, entity.id))
             } catch (_: IOException) {
-                // skip unreachable playlist; surface errors via UI if needed
+                // skip unreachable playlist
             }
         }
         all
     }
+
+    private fun resolveContent(url: String): String =
+        if (url == DefaultPlaylist.BUILTIN_URL) DefaultPlaylist.content
+        else fetchUrl(url)
 
     private fun fetchUrl(url: String): String {
         val request = Request.Builder().url(url).build()

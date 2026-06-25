@@ -26,6 +26,16 @@
     <string name="settings_desc">Configure BBC</string>
     <string name="setting_sources">Manage Sources</string>
     <string name="setting_sources_desc">Add or remove M3U playlist URLs</string>
+    <string name="setting_startup_tab">Startup Section</string>
+    <string name="setting_startup_tab_desc">Which section opens on launch</string>
+    <string name="setting_quality">Player Quality</string>
+    <string name="setting_quality_desc">Stream quality preference</string>
+    <string name="setting_clear_cache">Clear Cache</string>
+    <string name="setting_clear_cache_desc">Clear EPG data and image cache</string>
+    <string name="cache_cleared">Cache cleared</string>
+    <string name="quality_auto">Auto</string>
+    <string name="quality_best">Best Quality</string>
+    <string name="quality_low">Data Saver</string>
     <string name="setting_language">Language</string>
     <string name="setting_language_desc">Choose the app language</string>
     <string name="setting_autoplay">Resume on startup</string>

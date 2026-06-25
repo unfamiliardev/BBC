@@ -1,7 +1,7 @@
 /*
- * BBC IPTV App
- * Copyright (c) 2026 UnfamiliarDev and contributors
- * SPDX-License-Identifier: GPL-3.0-or-later
+ * BBC — Open-source Android TV IPTV client
+ * Copyright (c) 2026 unfamiliardev
+ * SPDX-License-Identifier: Apache-2.0
  */
 
 package com.unfamiliardev.bbc.ui.channels
@@ -27,7 +27,7 @@ class ChannelListAdapter(
     private var channels: List<Channel> = emptyList()
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val chNumber: TextView = itemView.findViewById(R.id.ch_number)
+        val chAccent: View = itemView.findViewById(R.id.ch_accent)
         val chLogo: ImageView = itemView.findViewById(R.id.ch_logo)
         val chName: TextView = itemView.findViewById(R.id.ch_name)
         val chNow: TextView = itemView.findViewById(R.id.ch_now)
@@ -47,8 +47,6 @@ class ChannelListAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val channel = channels[position]
-
-        holder.chNumber.text = (position + 1).toString().padStart(3, '0')
 
         Glide.with(holder.chLogo.context)
             .load(channel.logoUrl)
@@ -70,23 +68,13 @@ class ChannelListAdapter(
 
         holder.chBadge.visibility = View.GONE
 
-        holder.itemView.setOnFocusChangeListener { view, hasFocus ->
-            if (hasFocus) {
-                onFocused(channel)
-                view.animate().scaleX(1.02f).scaleY(1.02f).setDuration(100).start()
-            } else {
-                view.animate().scaleX(1.0f).scaleY(1.0f).setDuration(100).start()
-            }
+        holder.itemView.setOnFocusChangeListener { _, hasFocus ->
+            holder.chAccent.visibility = if (hasFocus) View.VISIBLE else View.INVISIBLE
+            if (hasFocus) onFocused(channel)
         }
 
-        holder.itemView.setOnClickListener {
-            onClicked(channel)
-        }
-
-        holder.itemView.setOnLongClickListener {
-            onLongClicked(channel)
-            true
-        }
+        holder.itemView.setOnClickListener { onClicked(channel) }
+        holder.itemView.setOnLongClickListener { onLongClicked(channel); true }
     }
 
     override fun getItemCount(): Int = channels.size

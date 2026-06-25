@@ -72,7 +72,12 @@ class MainActivity : FragmentActivity() {
         resetPreviewPanel()
 
         if (savedInstanceState == null) {
-            showChannels()
+            when (AppSettings.getStartupTab(this)) {
+                AppSettings.TAB_VOD -> { setNavSelected(navVod); showVod() }
+                AppSettings.TAB_RECENT -> { setNavSelected(navRecent); showChannelsFiltered(recentOnly = true) }
+                AppSettings.TAB_EPG -> { setNavSelected(navEpg); showEpg() }
+                else -> showChannels()
+            }
 
             if (AppSettings.getAutoplay(this)) {
                 PlayerActivity.getLastPlayed(this)?.let { (url, name) ->
