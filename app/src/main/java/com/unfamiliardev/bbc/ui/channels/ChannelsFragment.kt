@@ -42,6 +42,7 @@ class ChannelsFragment : Fragment() {
     private var focusedChannel: Channel? = null
 
     private val recentOnly: Boolean get() = arguments?.getBoolean(ARG_RECENT_ONLY, false) == true
+    private val vodOnly: Boolean get() = arguments?.getBoolean(ARG_VOD_ONLY, false) == true
 
     private val jumpBuffer = StringBuilder()
     private val jumpHandler = Handler(Looper.getMainLooper())
@@ -61,6 +62,10 @@ class ChannelsFragment : Fragment() {
         val searchBar = view.findViewById<EditText>(R.id.search_bar)
         val titleView = view.findViewById<TextView>(R.id.channels_title)
         val countView = view.findViewById<TextView>(R.id.channels_count)
+
+        if (vodOnly) {
+            searchBar.hint = getString(R.string.search_vod)
+        }
 
         adapter = ChannelListAdapter(
             onFocused = { channel ->
@@ -87,17 +92,27 @@ class ChannelsFragment : Fragment() {
         viewModel.channels.observe(viewLifecycleOwner) { channels ->
             allChannels = channels
 
-            if (recentOnly) {
-                val recent = RecentlyWatchedStore.get(requireContext())
-                titleView.text = getString(R.string.category_recent)
-                countView.text = "${recent.size} channels"
-                adapter.updateChannels(recent)
-                categoryTabs.removeAllViews()
-            } else {
-                titleView.text = getString(R.string.live_tv)
-                countView.text = "ALL (${channels.size} channels)"
-                buildCategoryTabs(categoryTabs, channels)
-                applyFilter(searchBar.text.toString())
+            when {
+                recentOnly -> {
+                    val recent = RecentlyWatchedStore.get(requireContext())
+                    titleView.text = getString(R.string.category_recent)
+                    countView.text = "${recent.size} channels"
+                    adapter.updateChannels(recent)
+                    categoryTabs.removeAllViews()
+                }
+                vodOnly -> {
+                    val vod = channels.filter { isVodGroup(it.group) }
+                    titleView.text = getString(R.string.vod_title)
+                    countView.text = "${vod.size} titles"
+                    buildVodTabs(categoryTabs)
+                    applyFilter(searchBar.text.toString())
+                }
+                else -> {
+                    titleView.text = getString(R.string.live_tv)
+                    countView.text = "ALL (${channels.size} channels)"
+                    buildCategoryTabs(categoryTabs, channels)
+                    applyFilter(searchBar.text.toString())
+                }
             }
         }
 
@@ -120,12 +135,21 @@ class ChannelsFragment : Fragment() {
     private fun buildCategoryTabs(container: LinearLayout, channels: List<Channel>) {
         container.removeAllViews()
         val groups = listOf("ALL") + channels.map { it.group }.distinct().sorted()
+        addTabs(container, groups)
+    }
+
+    private fun buildVodTabs(container: LinearLayout) {
+        container.removeAllViews()
+        addTabs(container, listOf("ALL", "MOVIES", "SERIES"))
+    }
+
+    private fun addTabs(container: LinearLayout, tabs: List<String>) {
         val density = resources.displayMetrics.density
         val hPad = (20 * density).toInt()
         val vPad = (6 * density).toInt()
         val marginPx = (8 * density).toInt()
 
-        groups.forEach { group ->
+        tabs.forEach { group ->
             val tab = TextView(requireContext()).apply {
                 text = group
                 textSize = 12f
@@ -178,8 +202,20 @@ class ChannelsFragment : Fragment() {
     }
 
     private fun applyFilter(query: String) {
-        val base = if (selectedCategory == "ALL") allChannels
-                   else allChannels.filter { it.group == selectedCategory }
+        val base: List<Channel> = when {
+            recentOnly -> RecentlyWatchedStore.get(requireContext())
+            vodOnly -> {
+                val vod = allChannels.filter { isVodGroup(it.group) }
+                when (selectedCategory) {
+                    "MOVIES" -> vod.filter { isMovieGroup(it.group) }
+                    "SERIES" -> vod.filter { isSeriesGroup(it.group) }
+                    else -> vod
+                }
+            }
+            selectedCategory == "ALL" -> allChannels
+            else -> allChannels.filter { it.group == selectedCategory }
+        }
+
         val result = if (query.isBlank()) base
                      else base.filter { it.name.contains(query, ignoreCase = true) }
 
@@ -221,9 +257,38 @@ class ChannelsFragment : Fragment() {
 
     companion object {
         private const val ARG_RECENT_ONLY = "recent_only"
+        private const val ARG_VOD_ONLY = "vod_only"
 
-        fun newInstance(recentOnly: Boolean) = ChannelsFragment().apply {
-            arguments = bundleOf(ARG_RECENT_ONLY to recentOnly)
+        private val VOD_MOVIE_KEYWORDS = listOf(
+            "movie", "film", "filmy", "cinema", "kino", "movies"
+        )
+        private val VOD_SERIES_KEYWORDS = listOf(
+            "series", "serial", "seriál", "série", "show", "tv show",
+            "seriály", "serials"
+        )
+        private val VOD_KEYWORDS = VOD_MOVIE_KEYWORDS + VOD_SERIES_KEYWORDS + listOf("vod", "on demand")
+
+        fun isVodGroup(group: String): Boolean {
+            val lower = group.lowercase()
+            return VOD_KEYWORDS.any { lower.contains(it) }
         }
+
+        fun isMovieGroup(group: String): Boolean {
+            val lower = group.lowercase()
+            return VOD_MOVIE_KEYWORDS.any { lower.contains(it) }
+        }
+
+        fun isSeriesGroup(group: String): Boolean {
+            val lower = group.lowercase()
+            return VOD_SERIES_KEYWORDS.any { lower.contains(it) }
+        }
+
+        fun newInstance(recentOnly: Boolean = false, vodOnly: Boolean = false) =
+            ChannelsFragment().apply {
+                arguments = bundleOf(
+                    ARG_RECENT_ONLY to recentOnly,
+                    ARG_VOD_ONLY to vodOnly
+                )
+            }
     }
 }

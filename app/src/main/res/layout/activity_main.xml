@@ -59,6 +59,17 @@
             android:contentDescription="TV Guide"
             android:focusable="true" />
 
+        <ImageButton
+            android:id="@+id/nav_vod"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginBottom="4dp"
+            android:background="@drawable/sidebar_item_bg"
+            android:src="@drawable/ic_nav_vod"
+            android:scaleType="center"
+            android:contentDescription="Movies &amp; Series"
+            android:focusable="true" />
+
         <Space
             android:layout_width="0dp"
             android:layout_height="0dp"

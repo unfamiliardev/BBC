@@ -56,6 +56,7 @@ class MainActivity : FragmentActivity() {
     private lateinit var navRecent: ImageButton
     private lateinit var navChannels: ImageButton
     private lateinit var navEpg: ImageButton
+    private lateinit var navVod: ImageButton
     private lateinit var navSettings: ImageButton
 
     override fun attachBaseContext(newBase: Context) {
@@ -98,6 +99,7 @@ class MainActivity : FragmentActivity() {
         navRecent = findViewById(R.id.nav_recent)
         navChannels = findViewById(R.id.nav_channels)
         navEpg = findViewById(R.id.nav_epg)
+        navVod = findViewById(R.id.nav_vod)
         navSettings = findViewById(R.id.nav_settings)
     }
 
@@ -114,6 +116,10 @@ class MainActivity : FragmentActivity() {
             setNavSelected(navEpg)
             showEpg()
         }
+        navVod.setOnClickListener {
+            setNavSelected(navVod)
+            showVod()
+        }
         navSettings.setOnClickListener {
             startActivity(Intent(this, SettingsActivity::class.java))
         }
@@ -125,6 +131,7 @@ class MainActivity : FragmentActivity() {
         navRecent.isSelected = false
         navChannels.isSelected = false
         navEpg.isSelected = false
+        navVod.isSelected = false
         selected.isSelected = true
     }
 
@@ -138,6 +145,10 @@ class MainActivity : FragmentActivity() {
 
     private fun showEpg() {
         swapContent(EpgFragment())
+    }
+
+    private fun showVod() {
+        swapContent(ChannelsFragment.newInstance(vodOnly = true))
     }
 
     private fun swapContent(fragment: Fragment) {

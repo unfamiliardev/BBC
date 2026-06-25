@@ -57,6 +57,11 @@
     <string name="update_download_failed">Download failed. Try again later.</string>
 
     <string name="live_tv">Live TV</string>
+    <string name="vod_title">Movies &amp; Series</string>
+    <string name="vod_tab_all">ALL</string>
+    <string name="vod_tab_movies">MOVIES</string>
+    <string name="vod_tab_series">SERIES</string>
+    <string name="search_vod">Search movies &amp; series…</string>
     <string name="tv_guide">TV Guide</string>
     <string name="search_channels">Search channels…</string>
     <string name="now_playing">NOW</string>
