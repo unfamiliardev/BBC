@@ -27,6 +27,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.TrackSelectionParameters
+import androidx.media3.common.TrackSelectionParameters.TrackSelectionOverride
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.ui.AspectRatioFrameLayout
 import com.unfamiliardev.bbc.data.model.Channel
@@ -226,7 +227,7 @@ class PlayerActivity : FragmentActivity() {
                             .buildUpon()
                             .setTrackTypeDisabled(targetType, false)
                             .addOverride(
-                                TrackSelectionParameters.TrackSelectionOverride(
+                                TrackSelectionOverride(
                                     group.mediaTrackGroup, listOf(trackIdx)
                                 )
                             )
