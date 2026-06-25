@@ -1,6 +1,6 @@
-/*
- * BBC — Open-source Android TV IPTV client
- * Copyright (c) 2024 unfamiliardev
+﻿/*
+ * BBC â€” Open-source Android TV IPTV client
+ * Copyright (c) 2026 unfamiliardev
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -83,7 +83,7 @@ class ChannelCardPresenter(
     }
 
     companion object {
-        // Vivid palette — one per channel based on name hash for consistency
+        // Vivid palette â€” one per channel based on name hash for consistency
         private val AVATAR_PALETTE = intArrayOf(
             0xFF4F46E5.toInt(), // indigo
             0xFF7C3AED.toInt(), // violet

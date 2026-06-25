@@ -1,6 +1,6 @@
 /*
  * BBC — Open-source Android TV IPTV client
- * Copyright (c) 2024 unfamiliardev
+ * Copyright (c) 2026 unfamiliardev
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -13,6 +13,7 @@ object AppSettings {
     private const val PREFS = "bbc_settings"
     private const val KEY_LANGUAGE = "language"
     private const val KEY_AUTOPLAY = "autoplay"
+    private const val KEY_EPG_URL = "epg_url"
 
     fun getLanguage(context: Context): String =
         prefs(context).getString(KEY_LANGUAGE, "") ?: ""
@@ -25,6 +26,12 @@ object AppSettings {
 
     fun setAutoplay(context: Context, enabled: Boolean) =
         prefs(context).edit().putBoolean(KEY_AUTOPLAY, enabled).apply()
+
+    fun getEpgUrl(context: Context): String =
+        prefs(context).getString(KEY_EPG_URL, "") ?: ""
+
+    fun setEpgUrl(context: Context, url: String) =
+        prefs(context).edit().putString(KEY_EPG_URL, url).apply()
 
     private fun prefs(context: Context) =
         context.getSharedPreferences(PREFS, Context.MODE_PRIVATE)

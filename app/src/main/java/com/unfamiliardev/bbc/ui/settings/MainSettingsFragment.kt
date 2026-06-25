@@ -1,6 +1,6 @@
-/*
- * BBC — Open-source Android TV IPTV client
- * Copyright (c) 2024 unfamiliardev
+﻿/*
+ * BBC â€” Open-source Android TV IPTV client
+ * Copyright (c) 2026 unfamiliardev
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -54,6 +54,14 @@ class MainSettingsFragment : GuidedStepSupportFragment() {
         )
         actions.add(
             GuidedAction.Builder(requireContext())
+                .id(ACTION_EPG)
+                .title(getString(R.string.setting_epg_source))
+                .description(AppSettings.getEpgUrl(requireContext()).ifEmpty { getString(R.string.setting_epg_source_desc) })
+                .descriptionEditable(true)
+                .build()
+        )
+        actions.add(
+            GuidedAction.Builder(requireContext())
                 .id(ACTION_ABOUT)
                 .title(getString(R.string.setting_about))
                 .description("v${BuildConfig.VERSION_NAME}")
@@ -79,6 +87,11 @@ class MainSettingsFragment : GuidedStepSupportFragment() {
                 Toast.makeText(requireContext(), R.string.confirm_clear, Toast.LENGTH_SHORT).show()
             }
 
+            ACTION_EPG -> {
+                val url = action.description?.toString() ?: ""
+                AppSettings.setEpgUrl(requireContext(), url)
+            }
+
             ACTION_ABOUT -> startActivity(Intent(requireContext(), CreditsActivity::class.java))
         }
     }
@@ -99,6 +112,7 @@ class MainSettingsFragment : GuidedStepSupportFragment() {
         private const val ACTION_LANGUAGE = 1L
         private const val ACTION_AUTOPLAY = 2L
         private const val ACTION_CLEAR = 3L
-        private const val ACTION_ABOUT = 4L
+        private const val ACTION_EPG = 4L
+        private const val ACTION_ABOUT = 5L
     }
 }

@@ -1,9 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- App -->
     <string name="app_name">BBC</string>
 
-    <!-- Browse -->
     <string name="category_all">All Channels (%d)</string>
     <string name="getting_started">Getting Started</string>
     <string name="add_first_playlist">+ Add Your First Playlist</string>
@@ -13,21 +11,17 @@
     <string name="credits">About</string>
     <string name="settings">Settings</string>
 
-    <!-- Playlist manager -->
     <string name="no_playlists">No playlists added yet.\nEnter an M3U URL above and tap Add.</string>
     <string name="hint_playlist_name">Name (optional)</string>
     <string name="hint_playlist_url">M3U URL (http://…)</string>
     <string name="add">Add</string>
     <string name="delete">Remove</string>
 
-    <!-- Player / errors -->
     <string name="error_loading">Failed to load some playlists: %s</string>
 
-    <!-- Credits -->
     <string name="developer_label">Developer</string>
     <string name="dismiss">Dismiss</string>
 
-    <!-- Settings page -->
     <string name="settings_title">Settings</string>
     <string name="settings_desc">Configure BBC</string>
     <string name="setting_language">Language</string>
@@ -37,6 +31,8 @@
     <string name="setting_clear_data">Clear all playlists</string>
     <string name="setting_clear_data_desc">Remove all saved M3U sources</string>
     <string name="setting_about">About</string>
+    <string name="setting_epg_source">EPG Source URL</string>
+    <string name="setting_epg_source_desc">XMLTV URL for TV Guide data</string>
     <string name="confirm_clear">All playlists cleared</string>
     <string name="autoplay_enabled">On</string>
     <string name="autoplay_disabled">Off</string>
@@ -44,15 +40,13 @@
     <string name="category_recent">Recently Watched</string>
     <string name="surprise_me">Surprise Me</string>
 
-    <!-- Channel options (long press) -->
-<string name="add_favourite">Add to Favourites</string>
+    <string name="add_favourite">Add to Favourites</string>
     <string name="remove_favourite">Remove from Favourites</string>
     <string name="add_my_list">Add to My List</string>
     <string name="remove_my_list">Remove from My List</string>
     <string name="category_favourites">Favourites</string>
     <string name="category_my_list">My List</string>
 
-    <!-- Auto-update -->
     <string name="update_title">Update Available</string>
     <string name="update_desc">Version %s is ready to install.</string>
     <string name="update_install_now">Download &amp; Install Now</string>
@@ -62,7 +56,15 @@
     <string name="update_downloading_progress">Downloading… %d%%</string>
     <string name="update_download_failed">Download failed. Try again later.</string>
 
-    <!-- Languages -->
+    <string name="live_tv">Live TV</string>
+    <string name="tv_guide">TV Guide</string>
+    <string name="search_channels">Search channels…</string>
+    <string name="now_playing">NOW</string>
+    <string name="no_epg">No programme info</string>
+    <string name="fav_add">☆  Add to Favourites</string>
+    <string name="fav_remove">★  Remove from Favourites</string>
+    <string name="press_ok">Press OK to watch</string>
+
     <string name="lang_system">System default</string>
     <string name="lang_en">English</string>
     <string name="lang_ru">Русский</string>

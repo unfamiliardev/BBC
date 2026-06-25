@@ -1,6 +1,6 @@
 /*
  * BBC — Open-source Android TV IPTV client
- * Copyright (c) 2024 unfamiliardev
+ * Copyright (c) 2026 unfamiliardev
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -12,5 +12,6 @@ data class Channel(
     val url: String,
     val logoUrl: String?,
     val group: String,
-    val playlistId: Long
+    val playlistId: Long,
+    val tvgId: String? = null
 )

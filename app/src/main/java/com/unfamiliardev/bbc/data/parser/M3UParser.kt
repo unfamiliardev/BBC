@@ -1,6 +1,6 @@
 /*
  * BBC — Open-source Android TV IPTV client
- * Copyright (c) 2024 unfamiliardev
+ * Copyright (c) 2026 unfamiliardev
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -47,7 +47,8 @@ object M3UParser {
                                 url = urlLine,
                                 logoUrl = attrs["tvg-logo"]?.ifEmpty { null },
                                 group = attrs["group-title"]?.ifEmpty { "Uncategorised" } ?: "Uncategorised",
-                                playlistId = playlistId
+                                playlistId = playlistId,
+                                tvgId = attrs["tvg-id"]?.ifEmpty { null }
                             )
                         )
                     }

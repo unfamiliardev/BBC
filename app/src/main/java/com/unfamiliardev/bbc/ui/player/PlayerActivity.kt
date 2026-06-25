@@ -1,6 +1,6 @@
-/*
- * BBC — Open-source Android TV IPTV client
- * Copyright (c) 2024 unfamiliardev
+﻿/*
+ * BBC â€” Open-source Android TV IPTV client
+ * Copyright (c) 2026 unfamiliardev
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -92,7 +92,7 @@ class PlayerActivity : FragmentActivity() {
         }
     }
 
-    // ── PiP ──────────────────────────────────────────────────────────────────
+    // â”€â”€ PiP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
@@ -126,7 +126,7 @@ class PlayerActivity : FragmentActivity() {
         }
     }
 
-    // ── Lifecycle ─────────────────────────────────────────────────────────────
+    // â”€â”€ Lifecycle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
     private fun saveLastPlayed(url: String, name: String) {
         getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit()
