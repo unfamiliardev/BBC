@@ -1,5 +1,5 @@
-﻿/*
- * BBC â€” Open-source Android TV IPTV client
+/*
+ * BBC — Open-source Android TV IPTV client
  * Copyright (c) 2026 unfamiliardev
  * SPDX-License-Identifier: Apache-2.0
  */
@@ -12,15 +12,23 @@ import android.content.Intent
 import android.content.res.Configuration
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Rational
 import android.view.KeyEvent
 import android.view.View
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.activity.viewModels
 import androidx.fragment.app.FragmentActivity
+import androidx.leanback.app.GuidedStepSupportFragment
+import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
+import androidx.media3.common.TrackSelectionParameters
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.ui.AspectRatioFrameLayout
 import com.unfamiliardev.bbc.data.model.Channel
 import com.unfamiliardev.bbc.databinding.ActivityPlayerBinding
 import com.unfamiliardev.bbc.ui.credits.CreditsActivity
@@ -39,6 +47,28 @@ class PlayerActivity : FragmentActivity() {
         startActivity(Intent(this, CreditsActivity::class.java))
     }
 
+    private val sleepHandler = Handler(Looper.getMainLooper())
+    private var sleepRunnable: Runnable? = null
+    private var sleepEndMs = 0L
+    private val sleepTickRunnable = object : Runnable {
+        override fun run() {
+            if (sleepEndMs == 0L) return
+            val remaining = ((sleepEndMs - System.currentTimeMillis()) / 1000 / 60).coerceAtLeast(0)
+            binding.sleepCountdown.text = "😴  ${remaining}m"
+            if (remaining > 0) sleepHandler.postDelayed(this, 30_000)
+        }
+    }
+
+    private val aspectModes = intArrayOf(
+        AspectRatioFrameLayout.RESIZE_MODE_FIT,
+        AspectRatioFrameLayout.RESIZE_MODE_FILL,
+        AspectRatioFrameLayout.RESIZE_MODE_ZOOM
+    )
+    private val aspectLabels = arrayOf("Fit", "Fill", "Zoom")
+    private var currentAspectIndex = 0
+
+    private val aspectBadgeHideHandler = Handler(Looper.getMainLooper())
+
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.onAttach(newBase))
     }
@@ -48,7 +78,7 @@ class PlayerActivity : FragmentActivity() {
         binding = ActivityPlayerBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val url = intent.getStringExtra(EXTRA_URL) ?: run { finish(); return }
+        val url  = intent.getStringExtra(EXTRA_URL)  ?: run { finish(); return }
         val name = intent.getStringExtra(EXTRA_NAME) ?: ""
 
         viewModel.setChannel(name, url)
@@ -92,7 +122,121 @@ class PlayerActivity : FragmentActivity() {
         }
     }
 
-    // â”€â”€ PiP â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+    // ── Sleep timer ──────────────────────────────────────────────────────────
+
+    fun setSleepTimer(minutes: Int) {
+        sleepRunnable?.let { sleepHandler.removeCallbacks(it) }
+        sleepHandler.removeCallbacks(sleepTickRunnable)
+
+        if (minutes <= 0) {
+            sleepEndMs = 0L
+            binding.sleepCountdown.visibility = View.GONE
+            return
+        }
+
+        sleepEndMs = System.currentTimeMillis() + minutes * 60_000L
+        val runnable = Runnable {
+            player?.pause()
+            finish()
+        }
+        sleepRunnable = runnable
+        sleepHandler.postDelayed(runnable, minutes * 60_000L)
+
+        binding.sleepCountdown.visibility = View.VISIBLE
+        sleepTickRunnable.run()
+    }
+
+    // ── Stream info ───────────────────────────────────────────────────────────
+
+    fun toggleStreamInfo() {
+        if (binding.streamInfoOverlay.visibility == View.VISIBLE) {
+            binding.streamInfoOverlay.visibility = View.GONE
+            return
+        }
+        val exo = player ?: return
+        val video = exo.videoFormat
+        val audio = exo.audioFormat
+
+        binding.infoResolution.text = if (video != null)
+            "Video: ${video.width}×${video.height} @ ${"%.1f".format(video.frameRate)}fps"
+        else "Video: unknown"
+
+        binding.infoVideoCodec.text = "Codec: ${video?.sampleMimeType?.substringAfter("video/") ?: "—"}"
+
+        binding.infoBitrate.text = if ((video?.bitrate ?: 0) > 0)
+            "Bitrate: ${video!!.bitrate / 1000} kbps"
+        else "Bitrate: —"
+
+        binding.infoAudio.text = if (audio != null)
+            "Audio: ${audio.sampleMimeType?.substringAfter("audio/") ?: "?"} ${audio.channelCount}ch ${audio.sampleRate}Hz"
+        else "Audio: —"
+
+        binding.infoUrl.text = intent.getStringExtra(EXTRA_URL) ?: ""
+
+        binding.streamInfoOverlay.visibility = View.VISIBLE
+    }
+
+    // ── Aspect ratio ──────────────────────────────────────────────────────────
+
+    fun cycleAspectRatio() {
+        currentAspectIndex = (currentAspectIndex + 1) % aspectModes.size
+        binding.playerView.resizeMode = aspectModes[currentAspectIndex]
+
+        binding.aspectBadge.text = aspectLabels[currentAspectIndex]
+        binding.aspectBadge.visibility = View.VISIBLE
+
+        aspectBadgeHideHandler.removeCallbacksAndMessages(null)
+        aspectBadgeHideHandler.postDelayed({ binding.aspectBadge.visibility = View.GONE }, 2000)
+    }
+
+    // ── Track selection ───────────────────────────────────────────────────────
+
+    fun openTrackSelector(type: String) {
+        val exo = player ?: return
+        val targetType = if (type == "audio") C.TRACK_TYPE_AUDIO else C.TRACK_TYPE_TEXT
+
+        val tracks = exo.currentTracks.groups
+            .filter { it.type == targetType }
+            .flatMapIndexed { groupIdx, group ->
+                (0 until group.length).map { trackIdx ->
+                    val format = group.getTrackFormat(trackIdx)
+                    val label = buildString {
+                        append(format.language?.uppercase() ?: "Track $trackIdx")
+                        if (format.label != null) append(" — ${format.label}")
+                        if (type == "audio" && format.channelCount > 0)
+                            append(" (${format.channelCount}ch)")
+                    }
+                    TrackInfo(groupIdx, trackIdx, label)
+                }
+            }
+
+        TrackSelectorFragment.tracks = tracks
+        TrackSelectorFragment.onTrackSelected = { groupIdx, trackIdx ->
+            val exoPlayer = player ?: return@onTrackSelected
+            if (groupIdx == -1) {
+                exoPlayer.trackSelectionParameters = exoPlayer.trackSelectionParameters
+                    .buildUpon()
+                    .setTrackTypeDisabled(targetType, true)
+                    .build()
+            } else {
+                val group = exoPlayer.currentTracks.groups.getOrNull(groupIdx) ?: return@onTrackSelected
+                exoPlayer.trackSelectionParameters = exoPlayer.trackSelectionParameters
+                    .buildUpon()
+                    .setTrackTypeDisabled(targetType, false)
+                    .setOverrideForType(
+                        TrackSelectionParameters.TrackSelectionOverride(group.mediaTrackGroup, trackIdx)
+                    )
+                    .build()
+            }
+        }
+
+        GuidedStepSupportFragment.add(
+            supportFragmentManager,
+            TrackSelectorFragment.newInstance(type)
+        )
+    }
+
+    // ── PiP ──────────────────────────────────────────────────────────────────
 
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
@@ -114,30 +258,22 @@ class PlayerActivity : FragmentActivity() {
     ) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
         isInPip = isInPictureInPictureMode
-        val overlayVisibility = if (isInPictureInPictureMode) View.GONE else View.VISIBLE
-        binding.channelTitle.visibility = overlayVisibility
-        if (!isInPictureInPictureMode) {
-            // Restore error/buffer state visibility when exiting PiP
-            binding.errorText.visibility =
-                if (binding.errorText.text.isNotEmpty()) View.VISIBLE else View.GONE
-        } else {
+        val v = if (isInPictureInPictureMode) View.GONE else View.VISIBLE
+        binding.channelTitle.visibility = v
+        binding.sleepCountdown.visibility = if (isInPictureInPictureMode || sleepEndMs == 0L) View.GONE else View.VISIBLE
+        if (isInPictureInPictureMode) {
             binding.bufferingIndicator.visibility = View.GONE
             binding.errorText.visibility = View.GONE
+            binding.streamInfoOverlay.visibility = View.GONE
         }
     }
 
-    // â”€â”€ Lifecycle â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-
-    private fun saveLastPlayed(url: String, name: String) {
-        getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit()
-            .putString(KEY_LAST_URL, url)
-            .putString(KEY_LAST_NAME, name)
-            .apply()
-    }
+    // ── Key handling ─────────────────────────────────────────────────────────
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (isInPip) return super.onKeyDown(keyCode, event)
         if (konamiDetector.onKeyDown(keyCode)) return true
+
         return when (keyCode) {
             KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE,
             KeyEvent.KEYCODE_DPAD_CENTER -> {
@@ -146,8 +282,34 @@ class PlayerActivity : FragmentActivity() {
             }
             KeyEvent.KEYCODE_MEDIA_PLAY  -> { player?.play(); true }
             KeyEvent.KEYCODE_MEDIA_PAUSE -> { player?.pause(); true }
+
+            KeyEvent.KEYCODE_DPAD_RIGHT -> {
+                player?.let { if (it.isCurrentMediaItemSeekable) it.seekTo(it.currentPosition + SEEK_MS) }
+                true
+            }
+            KeyEvent.KEYCODE_DPAD_LEFT -> {
+                player?.let { if (it.isCurrentMediaItemSeekable) it.seekTo((it.currentPosition - SEEK_MS).coerceAtLeast(0)) }
+                true
+            }
+
+            KeyEvent.KEYCODE_INFO -> { toggleStreamInfo(); true }
+
+            KeyEvent.KEYCODE_MENU -> {
+                GuidedStepSupportFragment.add(supportFragmentManager, PlayerMenuFragment())
+                true
+            }
+
             else -> super.onKeyDown(keyCode, event)
         }
+    }
+
+    // ── Lifecycle ─────────────────────────────────────────────────────────────
+
+    private fun saveLastPlayed(url: String, name: String) {
+        getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit()
+            .putString(KEY_LAST_URL, url)
+            .putString(KEY_LAST_NAME, name)
+            .apply()
     }
 
     override fun onPause() {
@@ -157,6 +319,7 @@ class PlayerActivity : FragmentActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
+        sleepHandler.removeCallbacksAndMessages(null)
         player?.release()
         player = null
     }
@@ -171,9 +334,11 @@ class PlayerActivity : FragmentActivity() {
         const val KEY_LAST_URL      = "last_url"
         const val KEY_LAST_NAME     = "last_name"
 
+        private const val SEEK_MS   = 15_000L
+
         fun getLastPlayed(context: Context): Pair<String, String>? {
             val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
-            val url = prefs.getString(KEY_LAST_URL, null) ?: return null
+            val url  = prefs.getString(KEY_LAST_URL, null) ?: return null
             val name = prefs.getString(KEY_LAST_NAME, "") ?: ""
             return url to name
         }

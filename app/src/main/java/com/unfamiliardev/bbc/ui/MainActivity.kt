@@ -232,6 +232,26 @@ class MainActivity : FragmentActivity() {
                     }
                 }
                 if (longPressConsumed && event.keyCode == KeyEvent.KEYCODE_DPAD_CENTER) return true
+
+                if (event.repeatCount == 0 && channels != null) {
+                    val digit = when (event.keyCode) {
+                        KeyEvent.KEYCODE_0 -> 0
+                        KeyEvent.KEYCODE_1 -> 1
+                        KeyEvent.KEYCODE_2 -> 2
+                        KeyEvent.KEYCODE_3 -> 3
+                        KeyEvent.KEYCODE_4 -> 4
+                        KeyEvent.KEYCODE_5 -> 5
+                        KeyEvent.KEYCODE_6 -> 6
+                        KeyEvent.KEYCODE_7 -> 7
+                        KeyEvent.KEYCODE_8 -> 8
+                        KeyEvent.KEYCODE_9 -> 9
+                        else -> null
+                    }
+                    if (digit != null) {
+                        channels.onDigitPressed(digit)
+                        return true
+                    }
+                }
             }
             KeyEvent.ACTION_UP -> {
                 if (longPressConsumed && event.keyCode == KeyEvent.KEYCODE_DPAD_CENTER) {

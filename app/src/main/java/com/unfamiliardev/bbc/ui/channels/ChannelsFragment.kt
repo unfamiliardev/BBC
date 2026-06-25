@@ -8,6 +8,8 @@ package com.unfamiliardev.bbc.ui.channels
 
 import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.Gravity
@@ -41,6 +43,12 @@ class ChannelsFragment : Fragment() {
 
     private val recentOnly: Boolean get() = arguments?.getBoolean(ARG_RECENT_ONLY, false) == true
 
+    private val jumpBuffer = StringBuilder()
+    private val jumpHandler = Handler(Looper.getMainLooper())
+    private var jumpRunnable: Runnable? = null
+    private var channelListView: RecyclerView? = null
+    private var jumpOverlay: TextView? = null
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View = inflater.inflate(R.layout.fragment_channels, container, false)
@@ -66,6 +74,9 @@ class ChannelsFragment : Fragment() {
                 (activity as? MainActivity)?.onChannelLongClicked(channel)
             }
         )
+
+        channelListView = channelList
+        jumpOverlay = view.findViewById(R.id.channel_jump_overlay)
 
         channelList.adapter = adapter
         channelList.layoutManager = LinearLayoutManager(requireContext())
@@ -177,6 +188,29 @@ class ChannelsFragment : Fragment() {
             compareByDescending<Channel> { it.url in favs }.thenBy { it.name }
         )
         adapter.updateChannels(sorted)
+    }
+
+    fun onDigitPressed(digit: Int) {
+        jumpRunnable?.let { jumpHandler.removeCallbacks(it) }
+        jumpBuffer.append(digit)
+        jumpOverlay?.text = jumpBuffer.toString()
+        jumpOverlay?.visibility = View.VISIBLE
+
+        val runnable = Runnable {
+            val number = jumpBuffer.toString().toIntOrNull() ?: 0
+            jumpBuffer.clear()
+            jumpOverlay?.visibility = View.GONE
+            if (number > 0) {
+                val index = number - 1
+                val list = channelListView ?: return@Runnable
+                list.scrollToPosition(index.coerceAtMost(adapter.itemCount - 1))
+                list.post {
+                    list.layoutManager?.findViewByPosition(index)?.requestFocus()
+                }
+            }
+        }
+        jumpRunnable = runnable
+        jumpHandler.postDelayed(runnable, 1200)
     }
 
     fun showOptionsForFocused(): Boolean {
