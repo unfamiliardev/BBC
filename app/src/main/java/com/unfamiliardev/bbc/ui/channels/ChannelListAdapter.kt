@@ -1,10 +1,4 @@
-/*
- * BBC — Open-source Android TV IPTV client
- * Copyright (c) 2026 unfamiliardev
- * SPDX-License-Identifier: Apache-2.0
- */
-
-package com.unfamiliardev.bbc.ui.channels
+﻿package com.unfamiliardev.bbc.ui.channels
 
 import android.view.LayoutInflater
 import android.view.View

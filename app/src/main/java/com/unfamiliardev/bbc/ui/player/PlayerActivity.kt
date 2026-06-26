@@ -1,10 +1,4 @@
-/*
- * BBC — Open-source Android TV IPTV client
- * Copyright (c) 2026 unfamiliardev
- * SPDX-License-Identifier: Apache-2.0
- */
-
-package com.unfamiliardev.bbc.ui.player
+﻿package com.unfamiliardev.bbc.ui.player
 
 import android.app.PictureInPictureParams
 import android.content.Context
@@ -49,8 +43,6 @@ class PlayerActivity : FragmentActivity() {
         startActivity(Intent(this, CreditsActivity::class.java))
     }
 
-    // ── OSD auto-hide ────────────────────────────────────────────────────────
-
     private val osdHandler = Handler(Looper.getMainLooper())
     private val osdHideRunnable = Runnable { hideOsd() }
 
@@ -66,8 +58,6 @@ class PlayerActivity : FragmentActivity() {
         binding.sleepCountdown.visibility = View.GONE
     }
 
-    // ── Sleep timer ──────────────────────────────────────────────────────────
-
     private val sleepHandler = Handler(Looper.getMainLooper())
     private var sleepRunnable: Runnable? = null
     private var sleepEndMs = 0L
@@ -79,8 +69,6 @@ class PlayerActivity : FragmentActivity() {
             if (remaining > 0) sleepHandler.postDelayed(this, 30_000)
         }
     }
-
-    // ── Aspect ratio ─────────────────────────────────────────────────────────
 
     private val aspectModes = intArrayOf(
         AspectRatioFrameLayout.RESIZE_MODE_FIT,
@@ -152,8 +140,6 @@ class PlayerActivity : FragmentActivity() {
         }
     }
 
-    // ── Sleep timer ───────────────────────────────────────────────────────────
-
     fun setSleepTimer(minutes: Int) {
         sleepRunnable?.let { sleepHandler.removeCallbacks(it) }
         sleepHandler.removeCallbacks(sleepTickRunnable)
@@ -175,8 +161,6 @@ class PlayerActivity : FragmentActivity() {
         binding.sleepCountdown.visibility = View.VISIBLE
         sleepTickRunnable.run()
     }
-
-    // ── Stream info ───────────────────────────────────────────────────────────
 
     fun toggleStreamInfo() {
         if (binding.streamInfoOverlay.visibility == View.VISIBLE) {
@@ -206,8 +190,6 @@ class PlayerActivity : FragmentActivity() {
         binding.streamInfoOverlay.visibility = View.VISIBLE
     }
 
-    // ── Aspect ratio ──────────────────────────────────────────────────────────
-
     fun cycleAspectRatio() {
         currentAspectIndex = (currentAspectIndex + 1) % aspectModes.size
         binding.playerView.resizeMode = aspectModes[currentAspectIndex]
@@ -218,8 +200,6 @@ class PlayerActivity : FragmentActivity() {
         aspectBadgeHideHandler.removeCallbacksAndMessages(null)
         aspectBadgeHideHandler.postDelayed({ binding.aspectBadge.visibility = View.GONE }, 2000)
     }
-
-    // ── Track selection ───────────────────────────────────────────────────────
 
     fun openTrackSelector(type: String) {
         val exo = player ?: return
@@ -272,8 +252,6 @@ class PlayerActivity : FragmentActivity() {
         )
     }
 
-    // ── PiP ──────────────────────────────────────────────────────────────────
-
     override fun onUserLeaveHint() {
         super.onUserLeaveHint()
         enterPip()
@@ -304,8 +282,6 @@ class PlayerActivity : FragmentActivity() {
             showOsd()
         }
     }
-
-    // ── Key handling ─────────────────────────────────────────────────────────
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (isInPip) return super.onKeyDown(keyCode, event)
@@ -345,8 +321,6 @@ class PlayerActivity : FragmentActivity() {
             else -> super.onKeyDown(keyCode, event)
         }
     }
-
-    // ── Lifecycle ─────────────────────────────────────────────────────────────
 
     private fun saveLastPlayed(url: String, name: String) {
         getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE).edit()
