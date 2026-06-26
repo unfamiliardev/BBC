@@ -30,6 +30,9 @@
     <string name="setting_startup_tab_desc">Which section opens on launch</string>
     <string name="setting_quality">Player Quality</string>
     <string name="setting_quality_desc">Stream quality preference</string>
+    <string name="setting_reload">Reload Sources</string>
+    <string name="setting_reload_desc">Re-fetch all M3U playlists now</string>
+    <string name="sources_reloaded">Sources reloaded</string>
     <string name="setting_clear_cache">Clear Cache</string>
     <string name="setting_clear_cache_desc">Clear EPG data and image cache</string>
     <string name="cache_cleared">Cache cleared</string>

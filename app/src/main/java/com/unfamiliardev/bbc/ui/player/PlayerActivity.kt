@@ -37,7 +37,9 @@ class PlayerActivity : FragmentActivity() {
     private val viewModel: PlayerViewModel by viewModels()
     private var player: ExoPlayer? = null
     private var isInPip = false
-    private var currentUrl: String = ""
+    internal var currentUrl: String = ""
+    var isMuted = false
+    var playbackSpeed = 1f
 
     private val konamiDetector = KonamiCodeDetector {
         startActivity(Intent(this, CreditsActivity::class.java))
@@ -65,7 +67,7 @@ class PlayerActivity : FragmentActivity() {
         override fun run() {
             if (sleepEndMs == 0L) return
             val remaining = ((sleepEndMs - System.currentTimeMillis()) / 1000 / 60).coerceAtLeast(0)
-            binding.sleepCountdown.text = "😴  ${remaining}m"
+            binding.sleepCountdown.text = "Sleep: ${remaining}m"
             if (remaining > 0) sleepHandler.postDelayed(this, 30_000)
         }
     }
@@ -109,6 +111,15 @@ class PlayerActivity : FragmentActivity() {
             )
         )
         initPlayer(url)
+        showOsd()
+    }
+
+    private fun loadChannel(channel: com.unfamiliardev.bbc.data.model.Channel) {
+        currentUrl = channel.url
+        binding.channelTitle.text = channel.name
+        saveLastPlayed(channel.url, channel.name)
+        RecentlyWatchedStore.record(this, channel)
+        initPlayer(channel.url)
         showOsd()
     }
 
@@ -199,6 +210,21 @@ class PlayerActivity : FragmentActivity() {
 
         aspectBadgeHideHandler.removeCallbacksAndMessages(null)
         aspectBadgeHideHandler.postDelayed({ binding.aspectBadge.visibility = View.GONE }, 2000)
+    }
+
+    fun isCurrentStreamSeekable() = player?.isCurrentMediaItemSeekable == true
+
+    fun toggleMute() {
+        val exo = player ?: return
+        isMuted = !isMuted
+        exo.volume = if (isMuted) 0f else 1f
+    }
+
+    fun reloadStream() = initPlayer(currentUrl)
+
+    fun setPlaybackSpeed(speed: Float) {
+        playbackSpeed = speed
+        player?.setPlaybackSpeed(speed)
     }
 
     fun openTrackSelector(type: String) {
@@ -302,6 +328,14 @@ class PlayerActivity : FragmentActivity() {
             KeyEvent.KEYCODE_MEDIA_PLAY  -> { player?.play(); true }
             KeyEvent.KEYCODE_MEDIA_PAUSE -> { player?.pause(); true }
 
+            KeyEvent.KEYCODE_DPAD_UP -> {
+                PlayerQueue.prev()?.let { loadChannel(it) }
+                true
+            }
+            KeyEvent.KEYCODE_DPAD_DOWN -> {
+                PlayerQueue.next()?.let { loadChannel(it) }
+                true
+            }
             KeyEvent.KEYCODE_DPAD_RIGHT -> {
                 player?.let { if (it.isCurrentMediaItemSeekable) it.seekTo(it.currentPosition + SEEK_MS) }
                 true

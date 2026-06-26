@@ -68,6 +68,12 @@ class MainSettingsFragment : GuidedStepSupportFragment() {
             .build()
 
         actions += GuidedAction.Builder(ctx)
+            .id(ACTION_RELOAD)
+            .title(getString(R.string.setting_reload))
+            .description(getString(R.string.setting_reload_desc))
+            .build()
+
+        actions += GuidedAction.Builder(ctx)
             .id(ACTION_CLEAR_CACHE)
             .title(getString(R.string.setting_clear_cache))
             .description(getString(R.string.setting_clear_cache_desc))
@@ -132,6 +138,12 @@ class MainSettingsFragment : GuidedStepSupportFragment() {
 
             ACTION_LANGUAGE -> add(parentFragmentManager, LanguagePickerFragment())
 
+            ACTION_RELOAD -> {
+                lifecycleScope.launch { PlaylistRepository(ctx).fetchChannels() }
+                Toast.makeText(ctx, R.string.sources_reloaded, Toast.LENGTH_SHORT).show()
+                requireActivity().finish()
+            }
+
             ACTION_CLEAR_CACHE -> {
                 EpgRepository.clearCache()
                 Glide.get(ctx).clearMemory()
@@ -180,8 +192,9 @@ class MainSettingsFragment : GuidedStepSupportFragment() {
         private const val ACTION_QUALITY       = 3L
         private const val ACTION_AUTOPLAY      = 4L
         private const val ACTION_LANGUAGE      = 5L
-        private const val ACTION_CLEAR_CACHE   = 6L
-        private const val ACTION_CLEAR         = 7L
-        private const val ACTION_ABOUT         = 8L
+        private const val ACTION_RELOAD        = 6L
+        private const val ACTION_CLEAR_CACHE   = 7L
+        private const val ACTION_CLEAR         = 8L
+        private const val ACTION_ABOUT         = 9L
     }
 }

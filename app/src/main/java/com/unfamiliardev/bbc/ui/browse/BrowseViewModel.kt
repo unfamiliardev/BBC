@@ -1,10 +1,4 @@
-﻿/*
- * BBC â€” Open-source Android TV IPTV client
- * Copyright (c) 2026 unfamiliardev
- * SPDX-License-Identifier: Apache-2.0
- */
-
-package com.unfamiliardev.bbc.ui.browse
+﻿package com.unfamiliardev.bbc.ui.browse
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
@@ -33,6 +27,7 @@ class BrowseViewModel(application: Application) : AndroidViewModel(application) 
     }
 
     fun refresh() {
+        if (_loading.value == true) return
         viewModelScope.launch {
             _loading.value = true
             _error.value = null

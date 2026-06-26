@@ -23,6 +23,7 @@ import com.unfamiliardev.bbc.R
 import com.unfamiliardev.bbc.data.model.Channel
 import com.unfamiliardev.bbc.ui.MainActivity
 import com.unfamiliardev.bbc.ui.browse.BrowseViewModel
+import com.unfamiliardev.bbc.ui.player.PlayerQueue
 import com.unfamiliardev.bbc.util.FavouritesStore
 import com.unfamiliardev.bbc.util.RecentlyWatchedStore
 
@@ -32,6 +33,7 @@ class ChannelsFragment : Fragment() {
     private lateinit var adapter: ChannelListAdapter
 
     private var allChannels: List<Channel> = emptyList()
+    private var currentDisplayedChannels: List<Channel> = emptyList()
     private var selectedCategory = "ALL"
     private var focusedChannel: Channel? = null
 
@@ -67,6 +69,9 @@ class ChannelsFragment : Fragment() {
                 (activity as? MainActivity)?.onChannelFocused(channel)
             },
             onClicked = { channel ->
+                val idx = currentDisplayedChannels.indexOf(channel)
+                PlayerQueue.channels = currentDisplayedChannels
+                PlayerQueue.index = idx.coerceAtLeast(0)
                 (activity as? MainActivity)?.onChannelClicked(channel)
             },
             onLongClicked = { channel ->
@@ -121,8 +126,10 @@ class ChannelsFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        if (!recentOnly) {
+        if (recentOnly) {
             applyFilter("")
+        } else {
+            viewModel.refresh()
         }
     }
 
@@ -217,6 +224,7 @@ class ChannelsFragment : Fragment() {
         val sorted = result.sortedWith(
             compareByDescending<Channel> { it.url in favs }.thenBy { it.name }
         )
+        currentDisplayedChannels = sorted
         adapter.updateChannels(sorted)
     }
 
