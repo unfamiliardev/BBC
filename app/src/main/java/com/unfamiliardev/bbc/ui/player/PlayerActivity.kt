@@ -43,10 +43,30 @@ class PlayerActivity : FragmentActivity() {
     private val viewModel: PlayerViewModel by viewModels()
     private var player: ExoPlayer? = null
     private var isInPip = false
+    private var currentUrl: String = ""
 
     private val konamiDetector = KonamiCodeDetector {
         startActivity(Intent(this, CreditsActivity::class.java))
     }
+
+    // ── OSD auto-hide ────────────────────────────────────────────────────────
+
+    private val osdHandler = Handler(Looper.getMainLooper())
+    private val osdHideRunnable = Runnable { hideOsd() }
+
+    private fun showOsd() {
+        binding.channelTitle.visibility = View.VISIBLE
+        if (sleepEndMs > 0L) binding.sleepCountdown.visibility = View.VISIBLE
+        osdHandler.removeCallbacks(osdHideRunnable)
+        osdHandler.postDelayed(osdHideRunnable, OSD_HIDE_DELAY_MS)
+    }
+
+    private fun hideOsd() {
+        binding.channelTitle.visibility = View.GONE
+        binding.sleepCountdown.visibility = View.GONE
+    }
+
+    // ── Sleep timer ──────────────────────────────────────────────────────────
 
     private val sleepHandler = Handler(Looper.getMainLooper())
     private var sleepRunnable: Runnable? = null
@@ -59,6 +79,8 @@ class PlayerActivity : FragmentActivity() {
             if (remaining > 0) sleepHandler.postDelayed(this, 30_000)
         }
     }
+
+    // ── Aspect ratio ─────────────────────────────────────────────────────────
 
     private val aspectModes = intArrayOf(
         AspectRatioFrameLayout.RESIZE_MODE_FIT,
@@ -81,6 +103,7 @@ class PlayerActivity : FragmentActivity() {
 
         val url  = intent.getStringExtra(EXTRA_URL)  ?: run { finish(); return }
         val name = intent.getStringExtra(EXTRA_NAME) ?: ""
+        currentUrl = url
 
         viewModel.setChannel(name, url)
         binding.channelTitle.text = name
@@ -98,9 +121,14 @@ class PlayerActivity : FragmentActivity() {
             )
         )
         initPlayer(url)
+        showOsd()
     }
 
     private fun initPlayer(url: String) {
+        player?.release()
+        binding.errorText.visibility = View.GONE
+        binding.bufferingIndicator.visibility = View.GONE
+
         player = ExoPlayer.Builder(this).build().also { exo ->
             binding.playerView.player = exo
             exo.setMediaItem(MediaItem.fromUri(url))
@@ -112,18 +140,19 @@ class PlayerActivity : FragmentActivity() {
                     binding.bufferingIndicator.visibility =
                         if (state == Player.STATE_BUFFERING) View.VISIBLE else View.GONE
                     if (state == Player.STATE_BUFFERING) binding.errorText.visibility = View.GONE
+                    if (state == Player.STATE_READY) showOsd()
                 }
 
                 override fun onPlayerError(error: PlaybackException) {
                     binding.bufferingIndicator.visibility = View.GONE
                     binding.errorText.visibility = View.VISIBLE
-                    binding.errorText.text = "Playback error: ${error.errorCodeName}"
+                    binding.errorText.text = "Playback error\n${error.errorCodeName}\n\nPress OK to retry"
                 }
             })
         }
     }
 
-    // ── Sleep timer ──────────────────────────────────────────────────────────
+    // ── Sleep timer ───────────────────────────────────────────────────────────
 
     fun setSleepTimer(minutes: Int) {
         sleepRunnable?.let { sleepHandler.removeCallbacks(it) }
@@ -172,7 +201,7 @@ class PlayerActivity : FragmentActivity() {
             "Audio: ${audio.sampleMimeType?.substringAfter("audio/") ?: "?"} ${audio.channelCount}ch ${audio.sampleRate}Hz"
         else "Audio: —"
 
-        binding.infoUrl.text = intent.getStringExtra(EXTRA_URL) ?: ""
+        binding.infoUrl.text = currentUrl
 
         binding.streamInfoOverlay.visibility = View.VISIBLE
     }
@@ -265,13 +294,14 @@ class PlayerActivity : FragmentActivity() {
     ) {
         super.onPictureInPictureModeChanged(isInPictureInPictureMode, newConfig)
         isInPip = isInPictureInPictureMode
-        val v = if (isInPictureInPictureMode) View.GONE else View.VISIBLE
-        binding.channelTitle.visibility = v
-        binding.sleepCountdown.visibility = if (isInPictureInPictureMode || sleepEndMs == 0L) View.GONE else View.VISIBLE
         if (isInPictureInPictureMode) {
+            osdHandler.removeCallbacks(osdHideRunnable)
+            hideOsd()
             binding.bufferingIndicator.visibility = View.GONE
             binding.errorText.visibility = View.GONE
             binding.streamInfoOverlay.visibility = View.GONE
+        } else {
+            showOsd()
         }
     }
 
@@ -281,10 +311,16 @@ class PlayerActivity : FragmentActivity() {
         if (isInPip) return super.onKeyDown(keyCode, event)
         if (konamiDetector.onKeyDown(keyCode)) return true
 
+        showOsd()
+
         return when (keyCode) {
             KeyEvent.KEYCODE_MEDIA_PLAY_PAUSE,
             KeyEvent.KEYCODE_DPAD_CENTER -> {
-                player?.let { if (it.isPlaying) it.pause() else it.play() }
+                if (binding.errorText.visibility == View.VISIBLE) {
+                    initPlayer(currentUrl)
+                } else {
+                    player?.let { if (it.isPlaying) it.pause() else it.play() }
+                }
                 true
             }
             KeyEvent.KEYCODE_MEDIA_PLAY  -> { player?.play(); true }
@@ -322,11 +358,19 @@ class PlayerActivity : FragmentActivity() {
     override fun onPause() {
         super.onPause()
         if (!isInPip) player?.pause()
+        osdHandler.removeCallbacks(osdHideRunnable)
+    }
+
+    override fun onResume() {
+        super.onResume()
+        showOsd()
     }
 
     override fun onDestroy() {
         super.onDestroy()
+        osdHandler.removeCallbacksAndMessages(null)
         sleepHandler.removeCallbacksAndMessages(null)
+        aspectBadgeHideHandler.removeCallbacksAndMessages(null)
         player?.release()
         player = null
     }
@@ -341,7 +385,8 @@ class PlayerActivity : FragmentActivity() {
         const val KEY_LAST_URL      = "last_url"
         const val KEY_LAST_NAME     = "last_name"
 
-        private const val SEEK_MS   = 15_000L
+        private const val SEEK_MS           = 15_000L
+        private const val OSD_HIDE_DELAY_MS = 7_000L
 
         fun getLastPlayed(context: Context): Pair<String, String>? {
             val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)

@@ -18,8 +18,21 @@ android {
         versionName "1.0.${buildNumber}"
     }
 
+    signingConfigs {
+        stable {
+            storeFile file("bbc.keystore")
+            storePassword "bbciptv"
+            keyAlias "bbc"
+            keyPassword "bbciptv"
+        }
+    }
+
     buildTypes {
+        debug {
+            signingConfig signingConfigs.stable
+        }
         release {
+            signingConfig signingConfigs.stable
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

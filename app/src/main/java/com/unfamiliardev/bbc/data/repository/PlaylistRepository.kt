@@ -7,7 +7,6 @@
 package com.unfamiliardev.bbc.data.repository
 
 import android.content.Context
-import com.unfamiliardev.bbc.data.DefaultPlaylist
 import com.unfamiliardev.bbc.data.db.AppDatabase
 import com.unfamiliardev.bbc.data.db.PlaylistEntity
 import com.unfamiliardev.bbc.data.model.Channel
@@ -42,18 +41,13 @@ class PlaylistRepository(context: Context) {
         val all = mutableListOf<Channel>()
         for (entity in dao.getAllOnce()) {
             try {
-                val content = resolveContent(entity.url)
-                all.addAll(M3UParser.parse(content, entity.id))
+                all.addAll(M3UParser.parse(fetchUrl(entity.url), entity.id))
             } catch (_: IOException) {
                 // skip unreachable playlist
             }
         }
         all
     }
-
-    private fun resolveContent(url: String): String =
-        if (url == DefaultPlaylist.BUILTIN_URL) DefaultPlaylist.content
-        else fetchUrl(url)
 
     private fun fetchUrl(url: String): String {
         val request = Request.Builder().url(url).build()
