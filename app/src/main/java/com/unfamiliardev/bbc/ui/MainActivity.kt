@@ -125,7 +125,7 @@ class MainActivity : FragmentActivity() {
         navChannels.isSelected = true
     }
 
-    private fun setNavSelected(selected: ImageButton) {
+    private fun setNavSelected(selected: TextView) {
         navRecent.isSelected = false
         navChannels.isSelected = false
         navEpg.isSelected = false
