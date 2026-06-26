@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.KeyEvent
 import android.view.View
-import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.fragment.app.Fragment
@@ -47,11 +46,11 @@ class MainActivity : FragmentActivity() {
     private lateinit var previewFavBtn: TextView
     private lateinit var previewHint: TextView
 
-    private lateinit var navRecent: ImageButton
-    private lateinit var navChannels: ImageButton
-    private lateinit var navEpg: ImageButton
-    private lateinit var navVod: ImageButton
-    private lateinit var navSettings: ImageButton
+    private lateinit var navRecent: TextView
+    private lateinit var navChannels: TextView
+    private lateinit var navEpg: TextView
+    private lateinit var navVod: TextView
+    private lateinit var navSettings: TextView
 
     override fun attachBaseContext(newBase: Context) {
         super.attachBaseContext(LocaleHelper.onAttach(newBase))
@@ -95,11 +94,11 @@ class MainActivity : FragmentActivity() {
         previewFavBtn = findViewById(R.id.preview_fav_btn)
         previewHint = findViewById(R.id.preview_hint)
 
-        navRecent = findViewById(R.id.nav_recent)
-        navChannels = findViewById(R.id.nav_channels)
-        navEpg = findViewById(R.id.nav_epg)
-        navVod = findViewById(R.id.nav_vod)
-        navSettings = findViewById(R.id.nav_settings)
+        navRecent = findViewById<TextView>(R.id.nav_recent)
+        navChannels = findViewById<TextView>(R.id.nav_channels)
+        navEpg = findViewById<TextView>(R.id.nav_epg)
+        navVod = findViewById<TextView>(R.id.nav_vod)
+        navSettings = findViewById<TextView>(R.id.nav_settings)
     }
 
     private fun setupSidebar() {

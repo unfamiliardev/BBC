@@ -1,190 +1,218 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/bg_gradient"
+    android:background="@color/background"
     android:orientation="horizontal">
 
-    <!-- ── Sidebar ─────────────────────────────── -->
     <LinearLayout
         android:id="@+id/sidebar"
-        android:layout_width="72dp"
+        android:layout_width="210dp"
         android:layout_height="match_parent"
         android:background="@color/sidebar_bg"
-        android:orientation="vertical"
-        android:gravity="center_horizontal"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp">
+        android:orientation="vertical">
 
-        <ImageView
-            android:layout_width="40dp"
-            android:layout_height="28dp"
-            android:src="@drawable/ic_bbc_logo"
-            android:scaleType="fitCenter"
-            android:layout_marginBottom="28dp"
-            android:contentDescription="@null" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="BBC"
+            android:textColor="@color/accent"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            android:letterSpacing="0.08" />
 
-        <ImageButton
-            android:id="@+id/nav_recent"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginBottom="4dp"
-            android:background="@drawable/sidebar_item_bg"
-            android:src="@drawable/ic_nav_recent"
-            android:scaleType="center"
-            android:contentDescription="Recent"
-            android:focusable="true" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider" />
 
-        <ImageButton
+        <TextView
             android:id="@+id/nav_channels"
-            android:layout_width="48dp"
+            android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginBottom="4dp"
-            android:background="@drawable/sidebar_item_bg"
-            android:src="@drawable/ic_nav_channels"
-            android:scaleType="center"
-            android:contentDescription="Channels"
-            android:focusable="true" />
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="Live TV"
+            android:textColor="@color/primary_text"
+            android:textSize="13sp"
+            android:focusable="true"
+            android:background="@drawable/nav_item_bg" />
 
-        <ImageButton
-            android:id="@+id/nav_epg"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_marginBottom="4dp"
-            android:background="@drawable/sidebar_item_bg"
-            android:src="@drawable/ic_nav_epg"
-            android:scaleType="center"
-            android:contentDescription="TV Guide"
-            android:focusable="true" />
-
-        <ImageButton
+        <TextView
             android:id="@+id/nav_vod"
-            android:layout_width="48dp"
+            android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:layout_marginBottom="4dp"
-            android:background="@drawable/sidebar_item_bg"
-            android:src="@drawable/ic_nav_vod"
-            android:scaleType="center"
-            android:contentDescription="Movies &amp; Series"
-            android:focusable="true" />
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="Movies &amp; Series"
+            android:textColor="@color/primary_text"
+            android:textSize="13sp"
+            android:focusable="true"
+            android:background="@drawable/nav_item_bg" />
 
-        <Space
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <ImageButton
-            android:id="@+id/nav_settings"
-            android:layout_width="48dp"
+        <TextView
+            android:id="@+id/nav_epg"
+            android:layout_width="match_parent"
             android:layout_height="48dp"
-            android:background="@drawable/sidebar_item_bg"
-            android:src="@drawable/ic_nav_settings"
-            android:scaleType="center"
-            android:contentDescription="Settings"
-            android:focusable="true" />
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="TV Guide"
+            android:textColor="@color/primary_text"
+            android:textSize="13sp"
+            android:focusable="true"
+            android:background="@drawable/nav_item_bg" />
 
-    </LinearLayout>
+        <TextView
+            android:id="@+id/nav_recent"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="Recently Watched"
+            android:textColor="@color/primary_text"
+            android:textSize="13sp"
+            android:focusable="true"
+            android:background="@drawable/nav_item_bg" />
 
-    <!-- ── Content ─────────────────────────────── -->
-    <FrameLayout
-        android:id="@+id/content_container"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1" />
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider"
+            android:layout_marginTop="8dp" />
 
-    <!-- ── Preview panel ───────────────────────── -->
-    <LinearLayout
-        android:id="@+id/preview_panel"
-        android:layout_width="280dp"
-        android:layout_height="match_parent"
-        android:background="@color/preview_bg"
-        android:orientation="vertical"
-        android:padding="24dp">
-
+        <!-- Preview panel embedded in nav -->
         <ImageView
             android:id="@+id/preview_logo"
             android:layout_width="match_parent"
-            android:layout_height="90dp"
-            android:layout_marginBottom="16dp"
-            android:scaleType="fitCenter"
+            android:layout_height="60dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="8dp"
+            android:scaleType="fitStart"
             android:contentDescription="@null" />
 
         <TextView
             android:id="@+id/preview_channel_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
             android:textColor="@color/primary_text"
-            android:textSize="16sp"
+            android:textSize="13sp"
             android:textStyle="bold"
             android:maxLines="2"
-            android:ellipsize="end"
-            android:layout_marginBottom="4dp"
-            android:hint="Select a channel"
-            android:textColorHint="@color/secondary_text" />
+            android:ellipsize="end" />
 
         <TextView
             android:id="@+id/preview_group"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:layout_marginTop="2dp"
             android:textColor="@color/secondary_text"
-            android:textSize="12sp"
-            android:layout_marginBottom="20dp" />
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="@color/divider"
-            android:layout_marginBottom="16dp" />
+            android:textSize="11sp"
+            android:maxLines="1"
+            android:ellipsize="end" />
 
         <TextView
             android:id="@+id/preview_now_label"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:layout_marginTop="10dp"
             android:text="@string/now_playing"
             android:textColor="@color/accent"
             android:textSize="10sp"
             android:textStyle="bold"
-            android:letterSpacing="0.15"
-            android:layout_marginBottom="6dp"
+            android:letterSpacing="0.1"
             android:visibility="gone" />
 
         <TextView
             android:id="@+id/preview_now_playing"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:layout_marginTop="2dp"
             android:textColor="@color/primary_text"
-            android:textSize="13sp"
-            android:maxLines="3"
+            android:textSize="11sp"
+            android:maxLines="2"
             android:ellipsize="end"
-            android:layout_marginBottom="24dp"
             android:visibility="gone" />
 
         <TextView
             android:id="@+id/preview_fav_btn"
             android:layout_width="match_parent"
-            android:layout_height="40dp"
+            android:layout_height="36dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="10dp"
             android:background="@drawable/item_focused_bg"
             android:textColor="@color/primary_text"
-            android:textSize="12sp"
-            android:textStyle="bold"
+            android:textSize="11sp"
             android:gravity="center"
             android:focusable="true"
             android:text="@string/fav_add"
-            android:layout_marginBottom="8dp"
             android:visibility="gone" />
 
         <TextView
             android:id="@+id/preview_hint"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:layout_marginTop="6dp"
             android:text="@string/press_ok"
             android:textColor="@color/secondary_text"
-            android:textSize="11sp"
+            android:textSize="10sp"
             android:gravity="center"
             android:visibility="gone" />
 
+        <Space
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider" />
+
+        <TextView
+            android:id="@+id/nav_settings"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:gravity="center_vertical"
+            android:paddingStart="20dp"
+            android:paddingEnd="20dp"
+            android:text="Settings"
+            android:textColor="@color/secondary_text"
+            android:textSize="13sp"
+            android:focusable="true"
+            android:background="@drawable/nav_item_bg" />
+
     </LinearLayout>
+
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        android:background="@color/divider" />
+
+    <FrameLayout
+        android:id="@+id/content_container"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
 
 </LinearLayout>

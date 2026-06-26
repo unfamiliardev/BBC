@@ -40,6 +40,14 @@ class ChannelsFragment : Fragment() {
     private val recentOnly: Boolean get() = arguments?.getBoolean(ARG_RECENT_ONLY, false) == true
     private val vodOnly: Boolean get() = arguments?.getBoolean(ARG_VOD_ONLY, false) == true
 
+    private val reloadHandler = Handler(Looper.getMainLooper())
+    private val reloadRunnable = object : Runnable {
+        override fun run() {
+            viewModel.refresh()
+            reloadHandler.postDelayed(this, 60_000)
+        }
+    }
+
     private val jumpBuffer = StringBuilder()
     private val jumpHandler = Handler(Looper.getMainLooper())
     private var jumpRunnable: Runnable? = null
@@ -130,7 +138,13 @@ class ChannelsFragment : Fragment() {
             applyFilter("")
         } else {
             viewModel.refresh()
+            reloadHandler.postDelayed(reloadRunnable, 60_000)
         }
+    }
+
+    override fun onPause() {
+        super.onPause()
+        reloadHandler.removeCallbacks(reloadRunnable)
     }
 
     private fun buildCategoryTabs(container: LinearLayout, channels: List<Channel>) {

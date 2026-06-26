@@ -3,13 +3,7 @@
 
     <item android:state_focused="true">
         <shape android:shape="rectangle">
-            <solid android:color="#1ACC1111" />
-        </shape>
-    </item>
-
-    <item android:state_selected="true">
-        <shape android:shape="rectangle">
-            <solid android:color="#0DCC1111" />
+            <solid android:color="#222222" />
         </shape>
     </item>
 

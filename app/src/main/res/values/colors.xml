@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="background">#060606</color>
-    <color name="sidebar_bg">#0E0000</color>
-    <color name="preview_bg">#0A0000</color>
-    <color name="surface">#130000</color>
-    <color name="card_bg">#160000</color>
+    <color name="background">#0D0D0D</color>
+    <color name="sidebar_bg">#111111</color>
+    <color name="preview_bg">#0F0F0F</color>
+    <color name="surface">#171717</color>
+    <color name="card_bg">#1C1C1C</color>
 
     <color name="brand">#3D0000</color>
     <color name="accent">#CC1111</color>
@@ -12,12 +12,12 @@
     <color name="accent_dim">#5C0000</color>
 
     <color name="primary_text">#FFFFFF</color>
-    <color name="secondary_text">#7A7A7A</color>
+    <color name="secondary_text">#888888</color>
     <color name="card_text_primary">#FFFFFF</color>
     <color name="card_text_secondary">#AAAAAA</color>
 
-    <color name="action_border">#2A0000</color>
-    <color name="credits_bg">#040000</color>
+    <color name="action_border">#282828</color>
+    <color name="credits_bg">#080808</color>
     <color name="error">#FF5252</color>
-    <color name="divider">#1E0000</color>
+    <color name="divider">#222222</color>
 </resources>
