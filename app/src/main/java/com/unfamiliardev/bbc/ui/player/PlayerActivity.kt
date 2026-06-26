@@ -39,7 +39,7 @@ class PlayerActivity : FragmentActivity() {
     private var isInPip = false
     internal var currentUrl: String = ""
     var isMuted = false
-    var playbackSpeed = 1f
+    var currentPlaybackSpeed = 1f
 
     private val konamiDetector = KonamiCodeDetector {
         startActivity(Intent(this, CreditsActivity::class.java))
@@ -223,7 +223,7 @@ class PlayerActivity : FragmentActivity() {
     fun reloadStream() = initPlayer(currentUrl)
 
     fun setPlaybackSpeed(speed: Float) {
-        playbackSpeed = speed
+        currentPlaybackSpeed = speed
         player?.setPlaybackSpeed(speed)
     }
 

@@ -12,7 +12,7 @@ class SpeedFragment : GuidedStepSupportFragment() {
 
     override fun onCreateActions(actions: MutableList<GuidedAction>, savedInstanceState: Bundle?) {
         val ctx = requireContext()
-        val current = (activity as? PlayerActivity)?.playbackSpeed ?: 1f
+        val current = (activity as? PlayerActivity)?.currentPlaybackSpeed ?: 1f
         listOf(
             "0.5x"  to 0.5f,
             "0.75x" to 0.75f,
