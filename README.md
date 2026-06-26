@@ -1,83 +1,142 @@
-# BBC — British Broadcasting Corporation
+# BBC
 
-An open-source Android TV IPTV player built for big screens. Add M3U playlists and browse channels from your couch.
+An open-source Android TV IPTV client. Add M3U playlists, browse live TV and VOD, and watch from your couch with full remote control support.
+
+> **Not affiliated with the BBC (British Broadcasting Corporation).**
+
+---
 
 ## Features
 
-- **M3U playlist support** — Add one or more M3U URLs; channels are fetched, parsed, and grouped automatically
-- **ExoPlayer playback** — Hardware-accelerated HLS/MPEG-TS/MP4 via Media3
-- **Channel grouping** — Categories parsed from `group-title` tags in M3U
-- **Channel logos** — Loaded from `tvg-logo` tags via Glide
-- **Persistent playlists** — Stored in Room DB; survives reboots
-- **D-pad navigation** — All screens are fully remote-friendly
-- **Dark leanback UI** — Standard Android TV browse layout with header categories
+- **M3U playlist support** — Add any number of M3U/M3U8 URLs; channels are fetched, parsed, and grouped automatically
+- **Live TV + VOD** — Channels are split into Live TV and Movies & Series sections based on group tags
+- **EPG / TV Guide** — XMLTV support for programme info and now-playing data
+- **ExoPlayer playback** — Hardware-accelerated HLS, MPEG-TS, and MP4 via Media3
+- **Channel logos** — Loaded from `tvg-logo` tags
+- **Favourites & Recently Watched** — Pinned channels and quick-resume
+- **Sleep timer** — Auto-stops playback after 15 / 30 / 60 / 90 min or 2 hours
+- **Track selector** — Switch audio tracks and subtitles mid-stream
+- **Aspect ratio toggle** — Fit / Fill / Zoom, cycled from the player menu
+- **Stream info HUD** — Resolution, codec, bitrate, audio format, and URL overlay
+- **Seek** — Skip ±15 seconds on VOD content
+- **Channel number jump** — Type a number on your remote to jump directly to that channel
+- **Picture-in-Picture** — Minimise the player while browsing other apps
+- **D-pad navigation** — Every screen is fully remote-friendly
+- **Dark red & black UI** — Custom vaporwave-themed interface
+
+---
 
 ## Requirements
 
 - Android TV or Google TV device running Android 5.0 (API 21) or higher
-- Internet connection to fetch playlists
+- An internet connection to fetch playlists
 
-## Setup
+---
 
-### Build from source
-
-1. Clone the repo:
-   ```sh
-   git clone https://github.com/unfamiliardev/BBC.git
-   cd BBC
-   ```
-
-2. Open in Android Studio (Hedgehog or newer recommended).
-
-3. Build and run on an Android TV emulator or device:
-   ```
-   Run > Run 'app'
-   ```
-
-4. On first launch, press the **search icon** (top-left of the browse screen) to open playlist management. Enter any valid M3U URL and tap **Add**. Navigate back to the main screen and wait for channels to load.
+## Installation
 
 ### Sideload a release APK
 
-Download the latest APK from the [Releases](https://github.com/unfamiliardev/BBC/releases) page and install via ADB:
+Download the latest APK from the [Releases](https://github.com/unfamiliardev/BBC/releases) page.
+
+**Via ADB:**
+```sh
+adb install bbc-debug.apk
+```
+
+**Via file manager on device:** Transfer the APK over USB or network and open it with a file manager that supports APK installs.
+
+> ### Upgrading from v1.0.17 or earlier
+>
+> Version 1.0.18 introduced a stable signing key. If you have **v1.0.17 or older** installed, Android will block the update with "App not installed as package conflicts with an existing package."
+>
+> **Fix:** Uninstall the old version first, then install v1.0.18+. You only need to do this once — all future updates will install over each other without any issue.
+
+### Build from source
 
 ```sh
-adb install bbc-release.apk
+git clone https://github.com/unfamiliardev/BBC.git
+cd BBC
 ```
+
+Open in Android Studio (Hedgehog or newer), then **Run → Run 'app'** on an Android TV device or emulator.
+
+---
+
+## Usage
+
+1. Open the app and go to **Settings → Manage Sources**
+2. Paste an M3U URL and tap **Add Source**
+3. Navigate back — channels load automatically
+4. Use the sidebar to switch between **Live TV**, **Movies & Series**, **TV Guide**, and **Recently Watched**
+
+### Player controls
+
+| Key | Action |
+|---|---|
+| OK / Play-Pause | Play / Pause |
+| DPAD Left / Right | Seek ±15s (VOD only) |
+| MENU | Player options (sleep timer, tracks, aspect ratio) |
+| INFO | Toggle stream info HUD |
+| Back | Exit player |
+
+---
 
 ## Project structure
 
 ```
 app/src/main/java/com/unfamiliardev/bbc/
   data/
-    db/          Room database (PlaylistEntity, PlaylistDao, AppDatabase)
-    model/       Data classes (Channel)
-    parser/      M3UParser — pure Kotlin, no dependencies
-    repository/  PlaylistRepository — single source of truth
+    db/          Room database
+    model/       Channel, Programme
+    parser/      M3UParser, XmltvParser
+    repository/  PlaylistRepository, EpgRepository
   ui/
-    browse/      BrowseFragment + BrowseViewModel + card presenters
-    player/      PlayerActivity + PlayerViewModel (ExoPlayer)
-    playlist/    PlaylistActivity + PlaylistViewModel (M3U management)
-    credits/     CreditsActivity
+    channels/    ChannelsFragment, ChannelListAdapter
+    epg/         EpgFragment, EpgAdapter
+    player/      PlayerActivity, PlayerMenuFragment, TrackSelectorFragment, SleepTimerFragment
+    playlist/    PlaylistActivity (source management)
+    settings/    MainSettingsFragment, LanguagePickerFragment
+    browse/      BrowseViewModel, ChannelOptionsFragment
   util/
-    KonamiCodeDetector.kt
+    AppSettings, FavouritesStore, RecentlyWatchedStore, LocaleHelper
 ```
 
-## Forking guide
+---
+
+## Settings
+
+| Setting | Description |
+|---|---|
+| Manage Sources | Add or remove M3U playlist URLs |
+| EPG Source URL | XMLTV URL for TV Guide data |
+| Startup Section | Which section opens on launch |
+| Player Quality | Auto / Best / Data Saver |
+| Resume on startup | Auto-play the last watched channel |
+| Language | App UI language |
+| Clear Cache | Wipe EPG data and image cache |
+| Clear All Playlists | Remove all saved sources |
+
+---
+
+## Forking
 
 | What to change | Where |
 |---|---|
 | App name | `res/values/strings.xml` → `app_name` |
-| Package name | `app/build.gradle` → `applicationId`, then rename the `com/unfamiliardev/bbc` source tree |
+| Package name | `app/build.gradle` → `applicationId`, rename source tree |
 | Accent color | `res/values/colors.xml` → `accent` |
-| Launcher banner | Replace `res/drawable/app_banner.xml` with a `320×180dp` PNG in `res/drawable-xhdpi/` |
-| Developer credit | `CreditsActivity.kt` + `AndroidManifest.xml` metadata |
-| License | `LICENSE` |
+| App icon | Replace drawables in `res/drawable-xhdpi/` |
+| Developer credit | `CreditsActivity.kt` |
+| Signing key | Replace `app/bbc.keystore` and update `build.gradle` credentials |
 
-The M3U parser (`M3UParser.kt`) is self-contained — no network calls, no Android dependencies. Easy to unit-test or swap out.
+---
 
 ## Contributing
 
-PRs welcome. Please keep changes focused — one feature or fix per PR.
+PRs welcome. Keep changes focused — one fix or feature per PR.
+
+---
 
 ## License
 
@@ -85,4 +144,12 @@ Apache 2.0. See [LICENSE](LICENSE).
 
 ---
 
-*BBC is not affiliated with the BBC (British Broadcasting Corporation).*
+## Star History
+
+<a href="https://www.star-history.com/?repos=unfamiliardev%2Fbbc&type=date&legend=top-left">
+ <picture>
+   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/chart?repos=unfamiliardev/bbc&type=date&theme=dark&legend=top-left" />
+   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/chart?repos=unfamiliardev/bbc&type=date&legend=top-left" />
+   <img alt="Star History Chart" src="https://api.star-history.com/chart?repos=unfamiliardev/bbc&type=date&legend=top-left" />
+ </picture>
+</a>
