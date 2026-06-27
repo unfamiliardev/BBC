@@ -20,7 +20,7 @@ android {
 
     signingConfigs {
         stable {
-            storeFile file("bbc.keystore")
+            storeFile rootProject.file("app/bbc.keystore")
             storePassword "bbciptv"
             keyAlias "bbc"
             keyPassword "bbciptv"
