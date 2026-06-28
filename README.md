@@ -2,6 +2,8 @@
 
 # BBC
 
+[![Telegram](https://img.shields.io/badge/Telegram-bbciptvapp-2CA5E0?logo=telegram&logoColor=white)](https://t.me/bbciptvapp)
+
 An open-source Android TV IPTV client. Add M3U playlists, browse live TV and VOD, and watch from your couch with full remote control support.
 
 - M3U/M3U8 playlist support with automatic channel grouping

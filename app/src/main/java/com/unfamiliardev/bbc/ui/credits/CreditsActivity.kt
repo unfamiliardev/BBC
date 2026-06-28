@@ -32,9 +32,11 @@ class CreditsActivity : FragmentActivity() {
         binding.appVersion.text = "v${BuildConfig.VERSION_NAME}"
 
         binding.githubLink.setOnClickListener {
-            startActivity(
-                Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/unfamiliardev/BBC"))
-            )
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/unfamiliardev/BBC")))
+        }
+
+        binding.telegramLink.setOnClickListener {
+            startActivity(Intent(Intent.ACTION_VIEW, Uri.parse("https://t.me/bbciptvapp")))
         }
 
         binding.dismissButton.setOnClickListener { finish() }
