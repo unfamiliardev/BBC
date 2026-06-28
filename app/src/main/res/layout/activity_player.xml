@@ -11,42 +11,37 @@
         android:layout_height="match_parent"
         android:focusable="false" />
 
-    <ProgressBar
-        android:id="@+id/buffering_indicator"
-        android:layout_width="64dp"
-        android:layout_height="64dp"
-        android:layout_gravity="center"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/error_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:background="#AA000000"
-        android:padding="16dp"
-        android:textColor="@color/error"
-        android:textSize="16sp"
-        android:visibility="gone" />
-
-    <!-- Bottom scrim gradient -->
+    <!-- Bottom gradient scrim -->
     <View
         android:layout_width="match_parent"
         android:layout_height="200dp"
         android:layout_gravity="bottom"
         android:background="@drawable/player_bottom_scrim" />
 
-    <!-- Bottom row: title + sleep -->
+    <!-- OSD: single bottom bar -->
     <LinearLayout
+        android:id="@+id/bottom_osd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
-        android:layout_marginBottom="28dp"
-        android:layout_marginStart="28dp"
-        android:layout_marginEnd="28dp"
         android:orientation="horizontal"
-        android:gravity="center_vertical">
+        android:gravity="center_vertical"
+        android:paddingStart="32dp"
+        android:paddingEnd="32dp"
+        android:paddingBottom="28dp"
+        android:paddingTop="16dp"
+        android:visibility="gone">
 
+        <!-- Channel logo -->
+        <ImageView
+            android:id="@+id/osd_logo"
+            android:layout_width="64dp"
+            android:layout_height="40dp"
+            android:layout_marginEnd="18dp"
+            android:scaleType="fitCenter"
+            android:visibility="gone" />
+
+        <!-- Left: channel name + group + now playing -->
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -60,45 +55,248 @@
                 android:textColor="#FFFFFF"
                 android:textSize="22sp"
                 android:textStyle="bold"
-                android:shadowColor="#AA000000"
-                android:shadowDx="1"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:shadowColor="#99000000"
+                android:shadowDx="0"
                 android:shadowDy="1"
-                android:shadowRadius="4" />
+                android:shadowRadius="8" />
 
             <TextView
                 android:id="@+id/channel_group"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#AAFFFFFF"
-                android:textSize="13sp"
+                android:layout_marginTop="2dp"
+                android:textColor="#88FFFFFF"
+                android:textSize="12sp"
+                android:maxLines="1"
+                android:ellipsize="end"
+                android:visibility="gone" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="6dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
                 android:visibility="gone"
-                android:layout_marginTop="2dp" />
+                android:id="@+id/now_playing_row">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="NOW"
+                    android:textColor="@color/accent"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:letterSpacing="0.1"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp"
+                    android:background="@color/accent_dim"
+                    android:layout_marginEnd="8dp" />
+
+                <TextView
+                    android:id="@+id/channel_now_playing"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#CCFFFFFF"
+                    android:textSize="13sp"
+                    android:maxLines="1"
+                    android:ellipsize="end" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/sleep_countdown"
+        <!-- Right: clock + badges + sleep -->
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:background="#99000000"
-            android:paddingStart="10dp"
-            android:paddingEnd="10dp"
-            android:paddingTop="6dp"
-            android:paddingBottom="6dp"
-            android:textColor="#FFCC88"
-            android:textSize="13sp"
-            android:visibility="gone" />
+            android:orientation="vertical"
+            android:gravity="end"
+            android:layout_marginStart="24dp">
+
+            <TextView
+                android:id="@+id/player_clock"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:textSize="22sp"
+                android:textStyle="bold"
+                android:fontFamily="monospace"
+                android:layout_marginBottom="6dp"
+                android:shadowColor="#99000000"
+                android:shadowDx="0"
+                android:shadowDy="1"
+                android:shadowRadius="4" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="end">
+
+                <TextView
+                    android:id="@+id/mute_badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="MUTED"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10sp"
+                    android:textStyle="bold"
+                    android:background="#AA333333"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:layout_marginEnd="6dp"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/aspect_badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="#FFFFFF"
+                    android:textSize="10sp"
+                    android:background="#AA333333"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="3dp"
+                    android:paddingBottom="3dp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/sleep_countdown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="#FFCC88"
+                android:textSize="12sp"
+                android:visibility="gone" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <!-- Stream info overlay (top-left) -->
+    <!-- top_osd kept as gone stub so binding compiles -->
+    <View
+        android:id="@+id/top_osd"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:visibility="gone" />
+
+    <!-- Buffering: subtle centered spinner -->
+    <LinearLayout
+        android:id="@+id/buffering_indicator"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:visibility="gone">
+
+        <ProgressBar
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:indeterminate="true"
+            android:indeterminateTint="@color/accent" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Connecting..."
+            android:textColor="#AAFFFFFF"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+
+    <!-- Error state -->
+    <LinearLayout
+        android:id="@+id/error_container"
+        android:layout_width="320dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="#EE111111"
+        android:orientation="vertical"
+        android:padding="28dp"
+        android:visibility="gone">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Playback Error"
+            android:textColor="@color/error"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/error_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#AAAAAA"
+            android:textSize="12sp"
+            android:fontFamily="monospace"
+            android:layout_marginBottom="16dp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Press OK to retry"
+            android:textColor="#555555"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+
+    <!-- Zap overlay: right side channel switch preview -->
+    <LinearLayout
+        android:id="@+id/zap_overlay"
+        android:layout_width="260dp"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|end"
+        android:layout_marginEnd="40dp"
+        android:background="#EE0D0D0D"
+        android:orientation="vertical"
+        android:paddingStart="20dp"
+        android:paddingEnd="20dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/zap_direction"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/accent"
+            android:textSize="10sp"
+            android:textAllCaps="true"
+            android:letterSpacing="0.12"
+            android:layout_marginBottom="6dp" />
+
+        <TextView
+            android:id="@+id/zap_channel_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="#FFFFFF"
+            android:textSize="17sp"
+            android:textStyle="bold"
+            android:maxLines="2"
+            android:ellipsize="end" />
+
+    </LinearLayout>
+
+    <!-- Stream info overlay -->
     <LinearLayout
         android:id="@+id/stream_info_overlay"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="top|start"
-        android:layout_margin="24dp"
+        android:layout_gravity="top|end"
+        android:layout_margin="28dp"
         android:background="@drawable/info_overlay_bg"
         android:orientation="vertical"
         android:padding="14dp"
@@ -109,63 +307,47 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#FFFFFF"
-            android:textSize="13sp"
+            android:textSize="12sp"
             android:fontFamily="monospace"
-            android:layout_marginBottom="3dp" />
+            android:layout_marginBottom="2dp" />
 
         <TextView
             android:id="@+id/info_video_codec"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#CCCCCC"
-            android:textSize="13sp"
+            android:textSize="12sp"
             android:fontFamily="monospace"
-            android:layout_marginBottom="3dp" />
+            android:layout_marginBottom="2dp" />
 
         <TextView
             android:id="@+id/info_bitrate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#CCCCCC"
-            android:textSize="13sp"
+            android:textSize="12sp"
             android:fontFamily="monospace"
-            android:layout_marginBottom="3dp" />
+            android:layout_marginBottom="2dp" />
 
         <TextView
             android:id="@+id/info_audio"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="#AAAAAA"
-            android:textSize="13sp"
+            android:textSize="12sp"
             android:fontFamily="monospace"
-            android:layout_marginBottom="3dp" />
+            android:layout_marginBottom="2dp" />
 
         <TextView
             android:id="@+id/info_url"
-            android:layout_width="240dp"
+            android:layout_width="260dp"
             android:layout_height="wrap_content"
-            android:textColor="#888888"
+            android:textColor="#666666"
             android:textSize="11sp"
             android:fontFamily="monospace"
             android:maxLines="2"
             android:ellipsize="middle" />
 
     </LinearLayout>
-
-    <!-- Aspect ratio badge (top-right) -->
-    <TextView
-        android:id="@+id/aspect_badge"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="top|end"
-        android:layout_margin="24dp"
-        android:background="#99000000"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp"
-        android:textColor="#FFFFFF"
-        android:textSize="13sp"
-        android:visibility="gone" />
 
 </FrameLayout>
